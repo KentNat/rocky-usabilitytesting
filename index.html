@@ -236,58 +236,72 @@
           'Yang kami tawarkan:\n- Kerja hybrid, kantor di Panin Tower Senayan City, Jakarta Pusat.\n- Kesempatan kerja lintas produk AI yang sudah dipakai 100+ perusahaan.\n- Tim kecil, flat, engineer terlibat penuh dari eksperimen sampai deployment.'
       } },
     { id: 'UT-03', title: 'Mengatur Penilaian Kandidat (Analisis CV)', needsCV: false,
-      instruction: 'Role AI Engineer membutuhkan kemampuan teknis kuat. Di Step 3 "Analisis CV", 5 parameter sudah otomatis terpilih dengan level default. Sesuaikan level yang menurut Anda kurang pas untuk role ini, lalu tambahkan 1 parameter penilaian baru yang relevan.',
-      criteria: ['Mengubah level minimal 1 parameter yang sudah ada (klik parameter → pilih salah satu dari 4 kartu level).', 'Membuat 1 parameter baru lewat "+ Buat parameter baru" (isi Nama parameter & Deskripsi singkat; rincian 4 level opsional).', 'Menyimpan konfigurasi (lanjut ke step berikutnya).'],
+      instruction: 'Di Step 3 "Analisis CV": (1) ubah level parameter Education dan Writing sesuai pertimbangan Anda untuk role AI Engineer, lalu (2) tambahkan 1 parameter baru — datanya sudah disiapkan di bawah, tinggal disalin ke form.',
+      criteria: ['Mengubah level parameter Education (klik parameter → pilih salah satu dari 4 kartu level).', 'Mengubah level parameter Writing.', 'Menambahkan parameter baru "Model Deployment Experience" lewat "+ Buat parameter baru", isi persis sesuai data yang disediakan.', 'Menyimpan konfigurasi (lanjut ke step berikutnya).'],
       brief: {
-        label: 'Kondisi Awal Step 3 "Analisis CV" (5 parameter sudah otomatis terpilih)',
+        label: 'Kondisi Awal Step 3 "Analisis CV" — ubah 2 yang ditandai',
         fields: [
-          ['Technical Skill', 'Sangat Baik (default)'],
-          ['Experience', 'Baik (default)'],
-          ['Education', 'Cukup (default)'],
-          ['Person to Job Fit', 'Baik (default)'],
-          ['Writing', 'Sedang (default)']
+          ['Technical Skill', 'Sangat Baik (default, tidak perlu diubah)'],
+          ['Experience', 'Baik (default, tidak perlu diubah)'],
+          ['Education ⟵ UBAH LEVEL INI', 'Cukup (default) → pilih level baru sesuai pertimbangan Anda'],
+          ['Person to Job Fit', 'Baik (default, tidak perlu diubah)'],
+          ['Writing ⟵ UBAH LEVEL INI', 'Sedang (default) → pilih level baru sesuai pertimbangan Anda']
         ],
         extraSections: [
-          { heading: 'Field modal "Buat parameter baru"', rows: [
-            ['Nama parameter', 'placeholder: "cth. Portfolio Quality"'],
-            ['Deskripsi singkat', 'placeholder: "Deskripsi singkat parameter ini"'],
-            ['Rincian level penilaian (opsional)', '4 kolom teks: Sangat Baik / Baik / Cukup / Sedang — boleh dikosongkan semua']
+          { heading: 'Parameter baru untuk ditambahkan — salin persis ke form "+ Buat parameter baru"', rows: [
+            ['Nama parameter', 'Model Deployment Experience'],
+            ['Deskripsi singkat', 'Pengalaman membawa model machine learning dari eksperimen ke production yang benar-benar dipakai.'],
+            ['Level Sangat Baik', 'Pernah men-deploy 3+ model ke production dan memonitornya secara mandiri.'],
+            ['Level Baik', 'Pernah men-deploy minimal 1 model ke production dengan bantuan tim.'],
+            ['Level Cukup', 'Pernah mencoba deployment di lingkungan staging/testing, belum production penuh.'],
+            ['Level Sedang', 'Baru familiar secara teori, belum pernah mencoba deployment.']
           ] }
         ],
-        note: '4 level yang tersedia untuk tiap parameter: Sangat Baik (hijau), Baik (kuning), Cukup (merah), Sedang (ungu) — klik parameter untuk memunculkan 4 kartu ini. Mengubah level yang mana dan menambah parameter apa adalah bagian dari task ini, bukan sesuatu yang ditentukan di brief ini. Kalau butuh parameter dari database (bukan bikin baru), ada juga "+ Tambah dari database parameter" — 3 sisanya: Managerial Role, Impact, Language Level.',
-        copyText: 'KONDISI AWAL STEP 3 — ANALISIS CV (5 parameter otomatis terpilih)\n' +
-          'Technical Skill: Sangat Baik (default)\nExperience: Baik (default)\nEducation: Cukup (default)\n' +
-          'Person to Job Fit: Baik (default)\nWriting: Sedang (default)\n\n' +
-          'FIELD MODAL "BUAT PARAMETER BARU"\nNama parameter, Deskripsi singkat, Rincian level penilaian (opsional, 4 kolom: Sangat Baik/Baik/Cukup/Sedang)'
+        note: 'Level baru untuk Education & Writing bebas Anda tentukan sendiri (Sangat Baik/Baik/Cukup/Sedang) — yang diuji adalah apakah Anda tahu caranya mengubah, bukan level mana yang "benar". Untuk parameter baru, semua isiannya SUDAH disediakan di atas — tinggal disalin persis, tidak perlu mengarang sendiri.',
+        copyText: 'UBAH LEVEL 2 PARAMETER INI (level baru bebas Anda tentukan)\nEducation: saat ini Cukup (default)\nWriting: saat ini Sedang (default)\n\n' +
+          'PARAMETER BARU — SALIN PERSIS KE FORM "+ BUAT PARAMETER BARU"\n' +
+          'Nama parameter: Model Deployment Experience\n' +
+          'Deskripsi singkat: Pengalaman membawa model machine learning dari eksperimen ke production yang benar-benar dipakai.\n' +
+          'Level Sangat Baik: Pernah men-deploy 3+ model ke production dan memonitornya secara mandiri.\n' +
+          'Level Baik: Pernah men-deploy minimal 1 model ke production dengan bantuan tim.\n' +
+          'Level Cukup: Pernah mencoba deployment di lingkungan staging/testing, belum production penuh.\n' +
+          'Level Sedang: Baru familiar secara teori, belum pernah mencoba deployment.'
       } },
     { id: 'UT-04', title: 'Mengatur Interview AI (Analisis Interview)', needsCV: false,
-      instruction: 'Di Step 4 "Analisis Interview", 6 parameter sudah otomatis terpilih dengan level default. Atur durasi & bahasa wawancara, sesuaikan level yang menurut Anda kurang pas, lalu tambahkan 1 parameter penilaian baru yang relevan.',
-      criteria: ['Mengisi durasi wawancara (angka bebas, default 20).', 'Menambahkan bahasa yang diizinkan lewat chip picker.', 'Mengubah level minimal 1 parameter yang sudah ada.', 'Membuat 1 parameter baru lewat "+ Buat parameter baru".', 'Memahami bahwa "Pengaman Pertanyaan Bot" (Step 6) bersifat opsional.'],
+      instruction: 'Di Step 4 "Analisis Interview": atur durasi & bahasa wawancara, (1) ubah level parameter Qualification dan Cultural Fit sesuai pertimbangan Anda, lalu (2) tambahkan 1 parameter baru — datanya sudah disiapkan di bawah, tinggal disalin ke form.',
+      criteria: ['Mengisi durasi wawancara (angka bebas, default 20).', 'Menambahkan bahasa yang diizinkan lewat chip picker.', 'Mengubah level parameter Qualification.', 'Mengubah level parameter Cultural Fit.', 'Menambahkan parameter baru "AI/ML Technical Depth" lewat "+ Buat parameter baru", isi persis sesuai data yang disediakan.', 'Memahami bahwa "Pengaman Pertanyaan Bot" (Step 6) bersifat opsional.'],
       brief: {
-        label: 'Field Durasi & Bahasa + Kondisi Awal 6 Parameter (sudah otomatis terpilih)',
+        label: 'Field Durasi & Bahasa + Kondisi Awal 6 Parameter — ubah 2 yang ditandai',
         fields: [
           ['Durasi wawancara (menit)', '20 — kolom angka bebas, bukan dropdown, default 20, minimal 5'],
           ['Bahasa yang diizinkan (chip, tambah dari dropdown)', 'English, Indonesia'],
-          ['Communication', 'Sangat Baik (default)'],
-          ['Qualification', 'Cukup (default)'],
-          ['Adaptability', 'Cukup (default)'],
-          ['Ethical Decision', 'Cukup (default)'],
-          ['Cultural Fit', 'Sedang (default)'],
-          ['Industry Knowledge', 'Baik (default)']
+          ['Communication', 'Sangat Baik (default, tidak perlu diubah)'],
+          ['Qualification ⟵ UBAH LEVEL INI', 'Cukup (default) → pilih level baru sesuai pertimbangan Anda'],
+          ['Adaptability', 'Cukup (default, tidak perlu diubah)'],
+          ['Ethical Decision', 'Cukup (default, tidak perlu diubah)'],
+          ['Cultural Fit ⟵ UBAH LEVEL INI', 'Sedang (default) → pilih level baru sesuai pertimbangan Anda'],
+          ['Industry Knowledge', 'Baik (default, tidak perlu diubah)']
         ],
         extraSections: [
-          { heading: 'Field modal "Buat parameter baru" (sama seperti di Analisis CV)', rows: [
-            ['Nama parameter', 'placeholder: "cth. Portfolio Quality"'],
-            ['Deskripsi singkat', 'placeholder: "Deskripsi singkat parameter ini"'],
-            ['Rincian level penilaian (opsional)', '4 kolom teks: Sangat Baik / Baik / Cukup / Sedang — boleh dikosongkan semua']
+          { heading: 'Parameter baru untuk ditambahkan — salin persis ke form "+ Buat parameter baru"', rows: [
+            ['Nama parameter', 'AI/ML Technical Depth'],
+            ['Deskripsi singkat', 'Kedalaman pemahaman teknis kandidat saat menjelaskan pendekatan machine learning dalam wawancara.'],
+            ['Level Sangat Baik', 'Menjelaskan trade-off teknis dengan detail dan contoh nyata dari pengalaman sendiri.'],
+            ['Level Baik', 'Menjelaskan konsep dengan benar, contoh masih umum/tidak terlalu spesifik.'],
+            ['Level Cukup', 'Memahami konsep dasar tapi kesulitan menjelaskan penerapannya.'],
+            ['Level Sedang', 'Jawaban hanya hafalan teori, belum menunjukkan pemahaman mendalam.']
           ] }
         ],
-        note: 'Pilihan bahasa lengkap yang tersedia di chip picker: English, Indonesia, Mandarin, Spanish, Japanese, Korean, Arabic, French. Mengubah level yang mana dan menambah parameter apa adalah bagian dari task ini. 12 parameter lain yang tersedia lewat "+ Tambah dari database parameter": Leadership Potential, Customer Orientation, Relevant Experience, Problem Solving, Innovation, Technical Proficiency, Time Management, Professional Growth, Teamwork, Stress Management, Conflict Resolution, Critical Thinking. Bot interviewer Rocky sudah otomatis menyusun pertanyaan sendiri dari deskripsi pekerjaan & hasil analisis CV — Step 6 "Pengaman Pertanyaan Bot" opsional, bukan wajib diisi.',
+        note: 'Pilihan bahasa lengkap yang tersedia di chip picker: English, Indonesia, Mandarin, Spanish, Japanese, Korean, Arabic, French. Level baru untuk Qualification & Cultural Fit bebas Anda tentukan sendiri — yang diuji adalah apakah Anda tahu caranya mengubah, bukan level mana yang "benar". Untuk parameter baru, semua isiannya SUDAH disediakan di atas — tinggal disalin persis. Bot interviewer Rocky sudah otomatis menyusun pertanyaan sendiri dari deskripsi pekerjaan & hasil analisis CV — Step 6 "Pengaman Pertanyaan Bot" opsional, bukan wajib diisi.',
         copyText: 'FIELD DURASI & BAHASA — STEP 4\nDurasi wawancara: 20 menit\nBahasa yang diizinkan: English, Indonesia\n\n' +
-          'KONDISI AWAL 6 PARAMETER (otomatis terpilih)\n' +
-          'Communication: Sangat Baik (default)\nQualification: Cukup (default)\nAdaptability: Cukup (default)\n' +
-          'Ethical Decision: Cukup (default)\nCultural Fit: Sedang (default)\nIndustry Knowledge: Baik (default)\n\n' +
-          'FIELD MODAL "BUAT PARAMETER BARU"\nNama parameter, Deskripsi singkat, Rincian level penilaian (opsional, 4 kolom: Sangat Baik/Baik/Cukup/Sedang)'
+          'UBAH LEVEL 2 PARAMETER INI (level baru bebas Anda tentukan)\nQualification: saat ini Cukup (default)\nCultural Fit: saat ini Sedang (default)\n\n' +
+          'PARAMETER BARU — SALIN PERSIS KE FORM "+ BUAT PARAMETER BARU"\n' +
+          'Nama parameter: AI/ML Technical Depth\n' +
+          'Deskripsi singkat: Kedalaman pemahaman teknis kandidat saat menjelaskan pendekatan machine learning dalam wawancara.\n' +
+          'Level Sangat Baik: Menjelaskan trade-off teknis dengan detail dan contoh nyata dari pengalaman sendiri.\n' +
+          'Level Baik: Menjelaskan konsep dengan benar, contoh masih umum/tidak terlalu spesifik.\n' +
+          'Level Cukup: Memahami konsep dasar tapi kesulitan menjelaskan penerapannya.\n' +
+          'Level Sedang: Jawaban hanya hafalan teori, belum menunjukkan pemahaman mendalam.'
       },
       reference: {
         label: 'Referensi: Pertanyaan default "Pengaman Pertanyaan Bot" (Step 6, sudah terisi otomatis)',
