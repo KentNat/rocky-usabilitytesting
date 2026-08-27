@@ -1,0 +1,790 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rocky HR Test Runner</title>
+<style id="page-style">
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --bg:#faf9f6;
+    --bg-raised:#ffffff;
+    --ink:#22252b;
+    --ink-soft:#565b66;
+    --ink-faint:#8a8f99;
+    --border:#e2ded4;
+    --border-soft:#ece8de;
+    --accent:#1d6f63;
+    --accent-ink:#ffffff;
+    --accent-soft:#e3efec;
+    --warn:#a8631a;
+    --warn-soft:#f8ecda;
+    --shadow: 0 1px 2px rgba(30,25,10,0.06), 0 8px 24px rgba(30,25,10,0.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#15171a; --bg-raised:#1c1f23; --ink:#e9e7e0; --ink-soft:#a7ada9; --ink-faint:#787f7c;
+      --border:#31352f; --border-soft:#292d28; --accent:#4fb39f; --accent-ink:#0b1a17;
+      --accent-soft:#1b2a26; --warn:#d99a4e; --warn-soft:#2c2416;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#15171a; --bg-raised:#1c1f23; --ink:#e9e7e0; --ink-soft:#a7ada9; --ink-faint:#787f7c;
+    --border:#31352f; --border-soft:#292d28; --accent:#4fb39f; --accent-ink:#0b1a17;
+    --accent-soft:#1b2a26; --warn:#d99a4e; --warn-soft:#2c2416;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:15.5px;line-height:1.55;}
+  .shell{max-width:800px;margin:0 auto;padding:36px 24px 100px;}
+
+  header.masthead{padding-bottom:22px;margin-bottom:22px;border-bottom:1px solid var(--border);}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.09em;text-transform:uppercase;color:var(--accent);font-weight:500;}
+  h1{font-family:'Source Serif 4',Georgia,serif;font-weight:700;font-size:26px;margin:4px 0 6px;letter-spacing:-0.01em;}
+  .subtitle{color:var(--ink-soft);font-size:14.5px;margin:0;}
+
+  .participant-box{display:flex;gap:10px;align-items:center;margin-top:18px;flex-wrap:wrap;}
+  .participant-box label{font-size:12.5px;color:var(--ink-soft);font-weight:600;}
+  .participant-box input{
+    flex:1;min-width:180px;font:inherit;font-size:14px;padding:8px 12px;border-radius:8px;
+    border:1px solid var(--border);background:var(--bg-raised);color:var(--ink);
+  }
+  .participant-box input:focus{outline:2px solid var(--accent);outline-offset:1px;}
+
+  h2.sec-title{font-family:'Source Serif 4',Georgia,serif;font-weight:600;font-size:19px;margin:32px 0 14px;}
+
+  .task-card{border:1px solid var(--border);border-radius:14px;background:var(--bg-raised);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden;}
+  .task-head{display:flex;align-items:center;gap:12px;padding:16px 18px;cursor:pointer;user-select:none;}
+  .task-id{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--accent);background:var(--accent-soft);padding:3px 9px;border-radius:6px;font-weight:600;flex-shrink:0;}
+  .task-title{font-weight:600;font-size:15px;flex:1;}
+  .task-status{font-size:11px;font-weight:600;padding:3px 9px;border-radius:100px;white-space:nowrap;}
+  .task-status.idle{background:var(--border-soft);color:var(--ink-faint);}
+  .task-status.running{background:var(--warn-soft);color:var(--warn);}
+  .task-status.done{background:var(--accent-soft);color:var(--accent);}
+  .chevron{color:var(--ink-faint);font-size:12px;transition:transform .15s;flex-shrink:0;}
+  .task-card.open .chevron{transform:rotate(90deg);}
+
+  .task-body{display:none;padding:0 18px 18px;border-top:1px solid var(--border-soft);}
+  .task-card.open .task-body{display:block;}
+
+  .instruction{background:var(--bg);border:1px solid var(--border-soft);border-radius:10px;padding:12px 14px;margin:14px 0 10px;font-size:14px;}
+  .instruction p{margin:0 0 8px;}
+  .instruction ul{margin:0;padding-left:18px;}
+  .instruction li{margin-bottom:4px;color:var(--ink-soft);}
+
+  .row-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0;}
+  button{
+    font:inherit;font-size:13px;font-weight:600;padding:8px 14px;border-radius:8px;border:1px solid var(--border);
+    background:var(--bg-raised);color:var(--ink);cursor:pointer;transition:background .1s;
+  }
+  button:hover{background:var(--border-soft);}
+  button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);}
+  button.primary:hover{filter:brightness(1.08);}
+  button.stop{background:var(--warn);color:#fff;border-color:var(--warn);}
+  button.ghost{background:transparent;}
+  button:disabled{opacity:.45;cursor:default;}
+
+  .timer-row{display:flex;align-items:center;gap:12px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--border);}
+  .timer-display{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums;font-size:22px;font-weight:600;min-width:76px;}
+  .timer-display.running{color:var(--warn);}
+  .timer-display.done{color:var(--accent);}
+
+  .cv-box{margin-top:12px;}
+  .cv-box .label{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint);font-weight:600;margin-bottom:6px;}
+  .cv-buttons{display:flex;gap:8px;flex-wrap:wrap;}
+  .cv-list{max-height:220px;overflow-y:auto;border:1px solid var(--border-soft);border-radius:10px;margin-top:8px;}
+  .cv-list table{min-width:0;}
+  .cv-list td{padding:6px 12px;font-size:13px;}
+  .cv-list button{padding:4px 10px;font-size:12px;}
+
+  .brief{margin-top:14px;border:1px solid var(--border-soft);border-radius:10px;overflow:hidden;}
+  .brief-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:var(--accent-soft);}
+  .brief-head .label{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);font-weight:700;}
+  .brief-body{padding:12px 14px;font-size:13.5px;}
+  .brief-body table{margin-bottom:10px;}
+  .brief-body table td{font-size:13px;}
+  .brief-body table td:first-child{color:var(--ink-soft);white-space:nowrap;width:1%;padding-right:16px;}
+  .brief-sub{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint);font-weight:600;margin:10px 0 4px;}
+  .brief-body ul{margin:0 0 4px;padding-left:18px;}
+  .brief-body li{margin-bottom:3px;color:var(--ink-soft);}
+  .brief-body p{margin:0 0 6px;color:var(--ink-soft);}
+
+  details.reference{margin-top:10px;border:1px solid var(--border-soft);border-radius:10px;}
+  details.reference summary{cursor:pointer;padding:9px 14px;font-size:12.5px;font-weight:600;color:var(--ink-soft);list-style:none;}
+  details.reference summary::-webkit-details-marker{display:none;}
+  details.reference summary::before{content:'▸ ';color:var(--ink-faint);}
+  details.reference[open] summary::before{content:'▾ ';}
+  details.reference .reference-body{padding:0 14px 12px;font-size:13px;}
+  details.reference table td{font-size:12.5px;}
+
+  .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px;background:var(--bg-raised);}
+  table{border-collapse:collapse;width:100%;min-width:480px;font-size:13.5px;}
+  th{text-align:left;background:var(--border-soft);color:var(--ink-soft);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;padding:9px 12px;border-bottom:1px solid var(--border);white-space:nowrap;}
+  td{padding:9px 12px;border-bottom:1px solid var(--border-soft);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  td.mono{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums;}
+  .empty-row{color:var(--ink-faint);text-align:center;padding:22px;font-size:13.5px;}
+
+  .note{background:var(--warn-soft);border:1px solid var(--warn);color:var(--warn);border-radius:8px;padding:8px 12px;font-size:12.5px;margin-top:10px;}
+
+  .toast{
+    position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:var(--bg);font-size:13px;font-weight:500;padding:10px 18px;border-radius:100px;
+    opacity:0;pointer-events:none;transition:opacity .2s, transform .2s;z-index:50;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  footer.doc-footer{margin-top:36px;padding-top:20px;border-top:1px solid var(--border);color:var(--ink-faint);font-size:12px;}
+</style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="application/json" id="state-data">{"logs":[{"id":"log-1787814938962-fn9vyx","participant":"Budi","taskId":"UT-08","durationSec":1,"endedAt":"2026-08-27T07:15:38.962Z"},{"id":"log-1787812895073-s9qw8u","participant":"Budi","taskId":"UT-08","durationSec":2,"endedAt":"2026-08-27T06:41:35.073Z"},{"id":"log-1787812889789-jos5u7","participant":"Budi","taskId":"UT-02","durationSec":3,"endedAt":"2026-08-27T06:41:29.789Z"},{"id":"log-1787812880389-e0deha","participant":"Budi","taskId":"UT-01","durationSec":3,"endedAt":"2026-08-27T06:41:20.389Z"}]}</script>
+  <script>
+(function () {
+  var SELF_SRC = document.currentScript.textContent;
+
+  var TASKS = [
+    { id: 'UT-01', title: 'Onboarding Pertama Kali', needsCV: false,
+      instruction: 'Anda adalah recruiter baru di Cakra AI, perusahaan yang baru mulai memakai Rocky. Siapkan akun perusahaan sampai Rocky siap dipakai untuk rekrutmen pertama.',
+      criteria: ['Menyelesaikan setup akun & informasi perusahaan.', 'Melengkapi informasi AI interviewer/bot.', 'Mencapai lingkungan kerja Rocky.'],
+      brief: {
+        label: 'Data Perusahaan — isi ke form onboarding',
+        fields: [
+          ['Nama perusahaan', 'Cakra AI (PT Cakra Tekno Nusantara)'],
+          ['Industri', 'Teknologi AI — Integrated AI Solutions'],
+          ['Website', 'cakra.ai'],
+          ['Alamat kantor', 'Panin Tower Senayan City, Lt. 15, Jl. Asia Afrika LOT 19, Jakarta Pusat, DKI Jakarta 10270'],
+          ['Tipe kerja', 'Hybrid'],
+          ['Deskripsi singkat', 'Cakra AI adalah perusahaan teknologi AI di Indonesia yang membangun solusi AI terintegrasi untuk otomasi rekrutmen, produktivitas meeting, dan optimasi bisnis.'],
+          ['Kontak HR/PIC', 'Tim People & Culture — Cakra AI (people.demo@cakra-ai-test.example)']
+        ],
+        extraSections: [
+          { heading: 'Konfigurasi AI Interviewer', rows: [
+            ['Nama', 'Nova'],
+            ['Bahasa default', 'Bahasa Indonesia'],
+            ['Durasi interview default', '20 menit'],
+            ['Perkenalan singkat', 'Halo, saya Nova, AI interviewer dari Cakra AI. Saya akan menemani Anda menjawab beberapa pertanyaan seputar pengalaman dan cara berpikir Anda dalam bekerja.']
+          ] }
+        ],
+        copyText: 'DATA PERUSAHAAN (Cakra AI)\n' +
+          'Nama perusahaan: Cakra AI (PT Cakra Tekno Nusantara)\n' +
+          'Industri: Teknologi AI — Integrated AI Solutions\n' +
+          'Website: cakra.ai\n' +
+          'Alamat kantor: Panin Tower Senayan City, Lt. 15, Jl. Asia Afrika LOT 19, Jakarta Pusat, DKI Jakarta 10270\n' +
+          'Tipe kerja: Hybrid\n' +
+          'Deskripsi singkat: Cakra AI adalah perusahaan teknologi AI di Indonesia yang membangun solusi AI terintegrasi untuk otomasi rekrutmen, produktivitas meeting, dan optimasi bisnis.\n' +
+          'Kontak HR/PIC: Tim People & Culture — Cakra AI (people.demo@cakra-ai-test.example)\n\n' +
+          'KONFIGURASI AI INTERVIEWER\n' +
+          'Nama: Nova\n' +
+          'Bahasa default: Bahasa Indonesia\n' +
+          'Durasi interview default: 20 menit\n' +
+          'Perkenalan singkat: Halo, saya Nova, AI interviewer dari Cakra AI. Saya akan menemani Anda menjawab beberapa pertanyaan seputar pengalaman dan cara berpikir Anda dalam bekerja.'
+      } },
+    { id: 'UT-02', title: 'Membuat Lowongan', needsCV: false,
+      instruction: 'Cakra AI sedang mencari AI Engineer. Buat lowongan baru sesuai hiring brief di bawah.',
+      criteria: ['Mengisi requirement (wajib vs nice-to-have) & tipe kerja.', 'Membuat/mengisi deskripsi pekerjaan.', 'Menyimpan lowongan.'],
+      brief: {
+        label: 'Job Requirement Brief — AI Engineer',
+        fields: [
+          ['Posisi', 'AI Engineer'],
+          ['Departemen', 'AI Engineering'],
+          ['Melapor ke', 'Head of AI Engineering'],
+          ['Tipe kerja', 'Full-time, permanen'],
+          ['Lokasi', 'Jakarta Selatan (Hybrid, 3 hari WFO)'],
+          ['Pengalaman', '2–5 tahun di bidang machine learning / data engineering'],
+          ['Target mulai kerja', 'Secepatnya, maksimal 6 minggu setelah offer diterima']
+        ],
+        bulletGroups: [
+          { heading: 'Kualifikasi wajib (must-have)', items: [
+            'Menguasai Python untuk data science/ML.',
+            'Familiar dengan minimal satu framework ML (PyTorch atau TensorFlow).',
+            'Terbiasa menulis query SQL untuk eksplorasi data.',
+            'Pernah men-deploy model ke lingkungan production (cloud apa pun).',
+            'Bisa bekerja dalam tim lintas fungsi.'
+          ] },
+          { heading: 'Nilai tambah (nice-to-have)', items: [
+            'Pengalaman LLM/NLP (fine-tuning, prompt engineering, RAG).',
+            'Familiar dengan praktik MLOps.',
+            'Pengalaman Docker/Kubernetes.',
+            'Pernah bekerja di startup dengan skala data besar.'
+          ] }
+        ],
+        note: 'Tentang Cakra AI: membangun rangkaian produk AI terintegrasi — Rocky, Sygma, Meetha, Becky, dan Genits — yang sudah dipercaya 100+ perusahaan di Indonesia. Tim AI Engineering menangani model machine learning di balik produk-produk tersebut.',
+        copyText: 'RINGKASAN LOWONGAN\n' +
+          'Posisi: AI Engineer\nDepartemen: AI Engineering\nMelapor ke: Head of AI Engineering\n' +
+          'Tipe kerja: Full-time, permanen\nLokasi: Jakarta Selatan (Hybrid, 3 hari WFO)\n' +
+          'Pengalaman: 2–5 tahun di bidang machine learning / data engineering\n' +
+          'Target mulai kerja: Secepatnya, maksimal 6 minggu setelah offer diterima\n\n' +
+          'KUALIFIKASI WAJIB\n- Menguasai Python untuk data science/ML.\n- Familiar dengan minimal satu framework ML (PyTorch atau TensorFlow).\n' +
+          '- Terbiasa menulis query SQL untuk eksplorasi data.\n- Pernah men-deploy model ke lingkungan production (cloud apa pun).\n- Bisa bekerja dalam tim lintas fungsi.\n\n' +
+          'NILAI TAMBAH\n- Pengalaman LLM/NLP (fine-tuning, prompt engineering, RAG).\n- Familiar dengan praktik MLOps.\n- Pengalaman Docker/Kubernetes.\n- Pernah bekerja di startup dengan skala data besar.\n\n' +
+          'TENTANG CAKRA AI\nCakra AI membangun rangkaian produk AI terintegrasi — Rocky, Sygma, Meetha, Becky, dan Genits — yang sudah dipercaya 100+ perusahaan di Indonesia. Tim AI Engineering menangani model machine learning di balik produk-produk tersebut.'
+      },
+      reference: {
+        label: 'Referensi: Contoh Deskripsi Pekerjaan (buka kalau butuh)',
+        text: 'AI Engineer — Cakra AI\n\n' +
+          'Cakra AI membangun rangkaian produk AI terintegrasi — Rocky, Sygma, Meetha, Becky, dan Genits — yang sudah dipercaya oleh 100+ perusahaan dan organisasi di Indonesia. Kami mencari AI Engineer untuk bergabung dengan tim AI Engineering yang menangani model machine learning di balik produk-produk tersebut.\n\n' +
+          'Yang akan Anda lakukan:\n- Membangun, melatih, dan men-deploy model machine learning untuk kebutuhan produk Cakra AI.\n- Memelihara dan meningkatkan performa model yang sudah berjalan di production.\n- Berkolaborasi dengan tim data engineering untuk memastikan kualitas data pipeline.\n- Berkolaborasi dengan tim product untuk menerjemahkan kebutuhan bisnis klien menjadi solusi model.\n\n' +
+          'Yang kami cari:\n- 2–5 tahun pengalaman di machine learning/data engineering.\n- Mahir Python, familiar PyTorch atau TensorFlow.\n- Terbiasa dengan SQL dan eksplorasi data skala besar.\n- Pernah men-deploy model ke production.\n- Nilai tambah: pengalaman LLM/NLP/RAG, MLOps, Docker/Kubernetes.\n\n' +
+          'Yang kami tawarkan:\n- Kerja hybrid, kantor di Panin Tower Senayan City, Jakarta Pusat.\n- Kesempatan kerja lintas produk AI yang sudah dipakai 100+ perusahaan.\n- Tim kecil, flat, engineer terlibat penuh dari eksperimen sampai deployment.'
+      } },
+    { id: 'UT-03', title: 'Mengatur Penilaian Kandidat', needsCV: false,
+      instruction: 'Role AI Engineer membutuhkan kemampuan teknis kuat. Atur penilaian kandidat agar hal itu jadi prioritas.',
+      criteria: ['Memilih parameter relevan & menyesuaikan bobot.', 'Menyimpan konfigurasi penilaian.'] },
+    { id: 'UT-04', title: 'Mengatur Interview AI', needsCV: false,
+      instruction: 'Siapkan interview AI berdurasi ~20 menit untuk role AI Engineer sesuai interview brief di bawah.',
+      criteria: ['Menentukan durasi, bahasa, dan kriteria/prioritas interview.', 'Memahami bahwa "Pengaman Pertanyaan Bot" bersifat opsional.', 'Menyimpan konfigurasi.'],
+      brief: {
+        label: 'Interview Requirement Brief — AI Engineer',
+        fields: [
+          ['Durasi interview', '~20 menit'],
+          ['Bahasa yang diizinkan', 'Bahasa Indonesia dan Bahasa Inggris'],
+          ['Fokus utama', 'Problem-solving teknis ML, pengalaman deployment, cara berpikir menghadapi data bermasalah'],
+          ['Fokus sekunder', 'Komunikasi — menjelaskan hal teknis ke non-teknis']
+        ],
+        bulletGroups: [
+          { heading: 'Kriteria / prioritas interview', items: [
+            '[Tinggi] Problem-solving teknis: bagaimana kandidat mendekati masalah ML yang ambigu.',
+            '[Tinggi] Pengalaman nyata: kedalaman cerita tentang proyek ML yang pernah dikerjakan.',
+            '[Sedang] Komunikasi: kejelasan menjelaskan konsep teknis.',
+            '[Rendah] Pengetahuan umum industri AI.'
+          ] }
+        ],
+        note: 'Bot interviewer Rocky sudah otomatis menyusun pertanyaan relevan sendiri — bagian "Pengaman Pertanyaan Bot" opsional, bukan wajib diisi.',
+        copyText: 'KEBUTUHAN INTERVIEW\nDurasi: ~20 menit\nBahasa yang diizinkan: Bahasa Indonesia dan Bahasa Inggris\n' +
+          'Fokus utama: Problem-solving teknis ML, pengalaman deployment, cara berpikir menghadapi data bermasalah\n' +
+          'Fokus sekunder: Komunikasi — menjelaskan hal teknis ke non-teknis\n\n' +
+          'KRITERIA / PRIORITAS INTERVIEW\n1. [Tinggi] Problem-solving teknis\n2. [Tinggi] Pengalaman nyata proyek ML\n3. [Sedang] Komunikasi\n4. [Rendah] Pengetahuan umum industri AI'
+      },
+      reference: {
+        label: 'Referensi: Contoh Kriteria & Pertanyaan Screening (buka kalau butuh)',
+        text: 'CONTOH KRITERIA\n- Problem-solving teknis — bobot disarankan: Tinggi (inti pekerjaan AI Engineer sehari-hari)\n' +
+          '- Kedalaman pengalaman proyek nyata — bobot disarankan: Tinggi (membedakan kandidat "tahu teori" vs "pernah kerjakan")\n' +
+          '- Komunikasi teknis — bobot disarankan: Sedang (penting untuk kolaborasi lintas tim)\n' +
+          '- Pengetahuan tren industri AI — bobot disarankan: Rendah (bagus dimiliki, bukan penentu utama)\n\n' +
+          'CONTOH PERTANYAAN SCREENING (opsional, hanya jika ingin menambah manual)\n' +
+          '1. Ceritakan proyek machine learning paling menantang yang pernah Anda kerjakan. Apa yang membuatnya sulit?\n' +
+          '2. Bagaimana Anda memastikan model tetap akurat setelah di-deploy ke production dalam jangka panjang?\n' +
+          '3. Pernahkah Anda menjelaskan hasil model ML ke tim non-teknis? Bagaimana caranya?\n' +
+          '4. Apa yang Anda lakukan ketika data untuk melatih model ternyata kotor/tidak lengkap?'
+      } },
+    { id: 'UT-05', title: 'Upload & Screening Kandidat', needsCV: true,
+      instruction: 'Lowongan menerima beberapa lamaran. Upload CV kandidat yang tersedia di bawah, lalu identifikasi siapa yang paling layak lanjut.',
+      criteria: ['Upload/import CV yang diberikan.', 'Membuka & membandingkan hasil screening.', 'Mengidentifikasi kandidat terbaik.'] },
+    { id: 'UT-06', title: 'Mengundang Kandidat', needsCV: true,
+      instruction: 'Undang kandidat terpilih untuk interview AI lewat metode pengiriman yang sesuai.',
+      criteria: ['Memilih metode pengiriman & meninjau isi undangan.', 'Mengonfirmasi atau mengirim undangan.'] },
+    { id: 'UT-07', title: 'Review Kandidat & Keputusan Hiring', needsCV: true,
+      instruction: 'Tiga kandidat sudah screening & interview. Hiring manager meminta Anda menentukan siapa yang layak lanjut.',
+      criteria: ['Meninjau hasil penilaian CV & interview.', 'Memilih/merekomendasikan kandidat berdasarkan bukti.', 'Memahami bahwa klik "Accept" hanya mengubah status chip, bukan memindahkan kandidat ke stage baru.'] },
+    { id: 'UT-08', title: 'Mengelola Parameter', needsCV: false,
+      instruction: 'Buat parameter penilaian baru yang bisa dipakai ulang di lowongan-lowongan berikutnya.',
+      criteria: ['Membuat parameter beserta deskripsi & rubrik penilaian.', 'Menyimpan parameter.'] }
+  ];
+
+  var CANDIDATES = [
+    { name: 'Nadia Kusuma', role: 'ML Engineer', years: 4, sector: 'fintech', edu: 'S1 Ilmu Komputer -- Universitas Indonesia',
+      summary: 'ML Engineer dengan 4 tahun pengalaman membangun dan men-deploy model machine learning di industri fintech. Terbiasa memelihara model production dan memonitor performanya.',
+      work: 'Membangun dan men-deploy 3 model production: credit scoring, fraud detection, dan model pendukung lainnya.\n- Melakukan monitoring dan pemeliharaan model yang berjalan di production.',
+      skills: 'Python, PyTorch, AWS SageMaker, SQL' },
+    { name: 'Farhan Ardiansyah', role: 'Data Analyst', years: 2, sector: 'e-commerce', edu: 'S1 Statistika -- Institut Teknologi Bandung',
+      summary: 'Data Analyst dengan 2 tahun pengalaman, 6 bulan terakhir mulai memegang proyek machine learning kecil. Fondasi statistik dan SQL kuat.',
+      work: 'Eksplorasi data dan reporting untuk kebutuhan bisnis.\n- Mulai mengerjakan proyek ML kecil dalam 6 bulan terakhir, belum pernah men-deploy model production secara mandiri.',
+      skills: 'Python (pandas, scikit-learn dasar), SQL, sedikit TensorFlow' },
+    { name: 'Bayu Setiawan', role: 'Backend Engineer', years: 1, sector: 'logistik', edu: 'S1 Teknik Informatika -- Universitas Gadjah Mada',
+      summary: 'Backend Engineer dengan 1 tahun pengalaman, pernah mengikuti bootcamp machine learning 3 bulan. Kuat di sisi backend/API, pengalaman ML masih terbatas.',
+      work: 'Membangun dan memelihara API backend.\n- Mengikuti bootcamp machine learning 3 bulan, belum ada pengalaman ML di pekerjaan nyata.',
+      skills: 'Golang, Python dasar' },
+    { name: 'Dewi Anggraini', role: 'AI Engineer', years: 5, sector: 'healthtech', edu: 'S1 Teknik Informatika -- Institut Teknologi Bandung',
+      summary: 'AI Engineer dengan 5 tahun pengalaman membangun model machine learning untuk produk kesehatan digital, termasuk model klasifikasi gambar medis di production.',
+      work: 'Membangun dan men-deploy model klasifikasi gambar dan model prediksi risiko pasien.\n- Memimpin migrasi pipeline training ke infrastruktur cloud.',
+      skills: 'Python, TensorFlow, GCP, Docker, SQL' },
+    { name: 'Rizky Pratama', role: 'Data Engineer', years: 3, sector: 'telko', edu: 'S1 Sistem Informasi -- Universitas Airlangga',
+      summary: 'Data Engineer dengan 3 tahun pengalaman membangun data pipeline skala besar, mulai belajar machine learning untuk proyek deteksi churn pelanggan.',
+      work: 'Membangun pipeline data harian untuk jutaan baris data pelanggan.\n- Membantu tim data science menyiapkan data untuk model churn, belum pernah men-deploy model sendiri.',
+      skills: 'Python, SQL, Apache Airflow, sedikit scikit-learn' },
+    { name: 'Siti Nurhaliza', role: 'QA Engineer', years: 1, sector: 'edtech', edu: 'S1 Teknik Informatika -- Universitas Brawijaya',
+      summary: 'QA Engineer dengan 1 tahun pengalaman testing aplikasi web, mengikuti kursus online machine learning namun belum punya pengalaman kerja di bidang ML.',
+      work: 'Menulis test case dan automation testing untuk aplikasi web.\n- Menyelesaikan kursus online "Machine Learning untuk Pemula", belum ada proyek ML nyata.',
+      skills: 'Python dasar, Selenium, SQL dasar' },
+    { name: 'Agus Salim', role: 'Data Scientist (Junior)', years: 2, sector: 'retail', edu: 'S1 Matematika -- Universitas Padjadjaran',
+      summary: 'Data Scientist junior dengan 2 tahun pengalaman membangun model prediksi permintaan sederhana untuk kebutuhan retail, belum pernah menangani deployment production penuh.',
+      work: 'Membangun model forecasting permintaan stok skala kecil.\n- Berkolaborasi dengan tim engineering untuk mencoba deployment terbatas (belum production penuh).',
+      skills: 'Python, scikit-learn, SQL, sedikit AWS' },
+    { name: 'Putri Wulandari', role: 'ML Engineer', years: 4, sector: 'gaming', edu: 'S1 Ilmu Komputer -- Universitas Gadjah Mada',
+      summary: 'ML Engineer dengan 4 tahun pengalaman membangun model rekomendasi dan deteksi anomali untuk platform gaming skala besar.',
+      work: 'Membangun dan men-deploy model rekomendasi konten dan model deteksi cheating pemain.\n- Memelihara model production dengan traffic tinggi.',
+      skills: 'Python, PyTorch, Kubernetes, SQL' },
+    { name: 'Fajar Nugroho', role: 'Frontend Engineer', years: 2, sector: 'media streaming', edu: 'S1 Teknik Informatika -- Universitas Diponegoro',
+      summary: 'Frontend Engineer dengan 2 tahun pengalaman membangun antarmuka web, tertarik pindah ke bidang AI namun belum punya pengalaman proyek ML.',
+      work: 'Membangun antarmuka web untuk platform streaming.\n- Belum pernah mengerjakan proyek machine learning.',
+      skills: 'JavaScript, React, sedikit Python' },
+    { name: 'Rina Kartika', role: 'Data Analyst', years: 3, sector: 'transportasi', edu: 'S1 Statistika -- Universitas Padjadjaran',
+      summary: 'Data Analyst dengan 3 tahun pengalaman analisis data operasional, satu tahun terakhir mulai membantu tim data science menyiapkan fitur untuk model ML.',
+      work: 'Analisis data operasional dan dashboard untuk tim manajemen.\n- Membantu feature engineering untuk model prediksi keterlambatan, tidak menangani training/deployment model.',
+      skills: 'SQL kuat, Python (pandas), Tableau' },
+    { name: 'Hendra Wijaya', role: 'Senior ML Engineer', years: 6, sector: 'fintech', edu: 'S2 Ilmu Komputer -- Institut Teknologi Bandung',
+      summary: 'Senior ML Engineer dengan 6 tahun pengalaman memimpin pengembangan model credit scoring dan fraud detection skala enterprise di industri fintech.',
+      work: 'Memimpin tim kecil membangun dan memelihara 5+ model production.\n- Merancang sistem monitoring model untuk mendeteksi model drift.',
+      skills: 'Python, PyTorch, TensorFlow, AWS, MLOps' },
+    { name: 'Yulia Safitri', role: 'Mobile Developer', years: 2, sector: 'e-commerce', edu: 'S1 Teknik Informatika -- Universitas Telkom',
+      summary: 'Mobile Developer dengan 2 tahun pengalaman membangun aplikasi Android, belum memiliki pengalaman machine learning di pekerjaan.',
+      work: 'Membangun dan memelihara fitur aplikasi mobile e-commerce.\n- Belum pernah mengerjakan proyek yang melibatkan model machine learning.',
+      skills: 'Kotlin, Java, sedikit Python' },
+    { name: 'Dimas Prasetyo', role: 'Data Engineer', years: 2, sector: 'logistik', edu: 'S1 Sistem Informasi -- Universitas Sebelas Maret',
+      summary: 'Data Engineer dengan 2 tahun pengalaman membangun pipeline data, mulai mencoba membangun model forecasting sederhana dalam beberapa bulan terakhir.',
+      work: 'Membangun pipeline ETL untuk data pengiriman.\n- Mencoba membangun model forecasting permintaan sederhana, masih tahap eksperimen.',
+      skills: 'Python, SQL, Apache Spark' },
+    { name: 'Indah Permatasari', role: 'AI Engineer', years: 4, sector: 'healthtech', edu: 'S1 Teknik Elektro -- Institut Teknologi Sepuluh Nopember',
+      summary: 'AI Engineer dengan 4 tahun pengalaman membangun model NLP untuk aplikasi kesehatan digital, termasuk chatbot skrining gejala yang sudah production.',
+      work: 'Membangun dan men-deploy model NLP untuk chatbot skrining gejala.\n- Melakukan fine-tuning model bahasa untuk domain kesehatan.',
+      skills: 'Python, PyTorch, Hugging Face, GCP' },
+    { name: 'Yoga Saputra', role: 'Software Engineer', years: 1, sector: 'retail', edu: 'S1 Teknik Informatika -- Universitas Muhammadiyah',
+      summary: 'Software Engineer dengan 1 tahun pengalaman membangun sistem backend, pernah mengikuti bootcamp data science 2 bulan tanpa pengalaman kerja ML.',
+      work: 'Membangun REST API untuk sistem point-of-sale.\n- Mengikuti bootcamp data science 2 bulan, belum ada proyek ML di pekerjaan nyata.',
+      skills: 'Java, Spring Boot, sedikit Python' },
+    { name: 'Maya Kusumawati', role: 'Data Analyst', years: 2, sector: 'telko', edu: 'S1 Matematika -- Universitas Indonesia',
+      summary: 'Data Analyst dengan 2 tahun pengalaman analisis data pelanggan, familiar dengan SQL dan mulai belajar machine learning secara mandiri.',
+      work: 'Analisis data pelanggan dan pembuatan laporan berkala.\n- Belajar machine learning secara mandiri lewat kursus online, belum ada proyek nyata.',
+      skills: 'SQL, Python (pandas), Excel' },
+    { name: 'Eko Santoso', role: 'DevOps Engineer', years: 3, sector: 'gaming', edu: 'S1 Teknik Informatika -- Universitas Bina Nusantara',
+      summary: 'DevOps Engineer dengan 3 tahun pengalaman mengelola infrastruktur cloud, belum memiliki pengalaman langsung membangun model machine learning.',
+      work: 'Mengelola infrastruktur CI/CD dan cloud untuk beberapa layanan backend.\n- Pernah membantu deployment model dari tim data science, tapi tidak membangun modelnya.',
+      skills: 'Docker, Kubernetes, AWS, sedikit Python' },
+    { name: 'Larasati Putri', role: 'ML Engineer', years: 5, sector: 'e-commerce', edu: 'S1 Ilmu Komputer -- Universitas Indonesia',
+      summary: 'ML Engineer dengan 5 tahun pengalaman membangun model rekomendasi produk dan personalisasi untuk platform e-commerce skala besar.',
+      work: 'Membangun dan men-deploy model rekomendasi produk yang melayani jutaan pengguna.\n- Melakukan eksperimen A/B testing untuk mengukur dampak model.',
+      skills: 'Python, TensorFlow, AWS SageMaker, SQL' },
+    { name: 'Bagas Wicaksono', role: 'Data Scientist (Junior)', years: 2, sector: 'transportasi', edu: 'S1 Statistika -- Institut Teknologi Sepuluh Nopember',
+      summary: 'Data Scientist junior dengan 2 tahun pengalaman membangun model prediksi waktu tempuh, pernah membantu deployment dengan bimbingan senior.',
+      work: 'Membangun model prediksi waktu tempuh perjalanan.\n- Membantu proses deployment model dengan bimbingan tim senior, belum mandiri sepenuhnya.',
+      skills: 'Python, scikit-learn, SQL' },
+    { name: 'Citra Ayu Lestari', role: 'UI/UX Designer', years: 2, sector: 'edtech', edu: 'S1 Desain Komunikasi Visual -- Universitas Trisakti',
+      summary: 'UI/UX Designer dengan 2 tahun pengalaman merancang produk digital, tidak memiliki latar belakang atau pengalaman teknis machine learning.',
+      work: 'Merancang antarmuka dan pengalaman pengguna untuk aplikasi edukasi.\n- Tidak memiliki pengalaman teknis pemrograman atau machine learning.',
+      skills: 'Figma, riset pengguna' },
+    { name: 'Fikri Ramadhan', role: 'Data Engineer', years: 3, sector: 'media streaming', edu: 'S1 Teknik Informatika -- Universitas Telkom',
+      summary: 'Data Engineer dengan 3 tahun pengalaman membangun pipeline data streaming, mulai terlibat proyek machine learning untuk rekomendasi konten dalam 1 tahun terakhir.',
+      work: 'Membangun pipeline data real-time untuk platform streaming.\n- Terlibat dalam proyek model rekomendasi konten sebagai pendukung data, bukan pemilik model.',
+      skills: 'Python, Kafka, SQL, sedikit TensorFlow' },
+    { name: 'Diana Puspita', role: 'AI Engineer', years: 5, sector: 'fintech', edu: 'S2 Data Science -- Universitas Indonesia',
+      summary: 'AI Engineer dengan 5 tahun pengalaman membangun dan memelihara model deteksi fraud dan model credit scoring untuk beberapa perusahaan fintech.',
+      work: 'Membangun dan men-deploy model deteksi fraud real-time.\n- Merancang ulang sistem monitoring performa model production.',
+      skills: 'Python, PyTorch, AWS, SQL, MLOps' },
+    { name: 'Arief Rahman', role: 'Backend Engineer', years: 1, sector: 'retail', edu: 'S1 Teknik Informatika -- Universitas Andalas',
+      summary: 'Backend Engineer dengan 1 tahun pengalaman membangun API, belum memiliki pengalaman atau ketertarikan mendalam pada machine learning.',
+      work: 'Membangun dan memelihara API untuk sistem inventori.\n- Belum pernah mengerjakan proyek machine learning.',
+      skills: 'Node.js, Express, SQL' },
+    { name: 'Vina Anjani', role: 'Data Analyst', years: 2, sector: 'healthtech', edu: 'S1 Statistika -- Universitas Gadjah Mada',
+      summary: 'Data Analyst dengan 2 tahun pengalaman di sektor kesehatan digital, terbiasa dengan SQL dan mulai eksplorasi model klasifikasi sederhana.',
+      work: 'Analisis data kunjungan pasien dan pembuatan dashboard operasional.\n- Eksplorasi model klasifikasi sederhana untuk prediksi kunjungan ulang, masih tahap belajar.',
+      skills: 'SQL, Python (pandas, scikit-learn dasar)' },
+    { name: 'Galih Pramono', role: 'Support Engineer', years: 1, sector: 'telko', edu: 'S1 Teknik Informatika -- Universitas Jenderal Soedirman',
+      summary: 'Support Engineer dengan 1 tahun pengalaman menangani troubleshooting sistem, tidak memiliki pengalaman membangun atau melatih model machine learning.',
+      work: 'Menangani troubleshooting dan dukungan teknis untuk sistem internal.\n- Tidak memiliki pengalaman machine learning.',
+      skills: 'SQL dasar, scripting Bash' }
+  ];
+
+  function slugify(name) {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  }
+  function candidateEmail(name) {
+    return slugify(name).replace(/-/g, '.') + '.demo@example.com';
+  }
+  function candidatePhone(i) {
+    return '0812-3456-' + String(7800 + i + 1).padStart(4, '0');
+  }
+  function buildCvText(c, i) {
+    return '=== CV KANDIDAT (SINTETIS / DUMMY -- untuk keperluan usability testing) ===\n\n' +
+      'Nama: ' + c.name + '\n' +
+      'Email: ' + candidateEmail(c.name) + '\n' +
+      'Telepon: ' + candidatePhone(i) + '\n\n' +
+      'RINGKASAN\n' + c.summary + '\n\n' +
+      'PENDIDIKAN\n' + c.edu + '\n\n' +
+      'PENGALAMAN KERJA\n' +
+      c.role + ' -- (' + c.years + ' tahun)\n' +
+      '- ' + c.work + '\n\n' +
+      'KEAHLIAN\n' + c.skills + '\n';
+  }
+  CANDIDATES.forEach(function (c, i) {
+    c.slug = slugify(c.name);
+    c.cvText = buildCvText(c, i);
+    c.filename = 'CV-' + String(i + 1).padStart(2, '0') + '-' + c.slug + '.txt';
+  });
+
+  var root = document.getElementById('root');
+  var stateEl = document.getElementById('state-data');
+  var STATE = JSON.parse(stateEl.textContent || '{"logs":[]}');
+  if (!STATE.logs) STATE.logs = [];
+
+  var RUNNING_KEY = 'rockyRunningTimers';
+  var PARTICIPANT_KEY = 'rockyParticipant';
+  var running = {};
+  try { running = JSON.parse(sessionStorage.getItem(RUNNING_KEY) || '{}'); } catch (e) { running = {}; }
+  var openCard = null;
+  var tickInterval = null;
+
+  function persistRunning() {
+    try { sessionStorage.setItem(RUNNING_KEY, JSON.stringify(running)); } catch (e) {}
+  }
+  function getParticipant() {
+    try { return localStorage.getItem(PARTICIPANT_KEY) || ''; } catch (e) { return ''; }
+  }
+  function setParticipantStorage(v) {
+    try { localStorage.setItem(PARTICIPANT_KEY, v); } catch (e) {}
+  }
+
+  function fmtElapsed(ms) {
+    var s = Math.max(0, Math.floor(ms / 1000));
+    var m = Math.floor(s / 60);
+    var r = s % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (r < 10 ? '0' : '') + r;
+  }
+  function fmtWhen(iso) {
+    try {
+      var d = new Date(iso);
+      return d.toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+    } catch (e) { return iso; }
+  }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function taskStatus(task) {
+    if (running[task.id]) return 'running';
+    var done = STATE.logs.some(function (l) { return l.taskId === task.id && l.participant === getParticipant(); });
+    return done ? 'done' : 'idle';
+  }
+
+  function fieldRows(rows) {
+    return rows.map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td></tr>'; }).join('');
+  }
+
+  function renderBrief(task) {
+    if (!task.brief) return '';
+    var b = task.brief;
+    var html = '<div class="brief" data-brief="' + task.id + '">' +
+      '<div class="brief-head"><span class="label">' + esc(b.label) + '</span>' +
+      '<button type="button" class="ghost" data-action="copy-brief" data-task="' + task.id + '">Salin Brief</button></div>' +
+      '<div class="brief-body">' +
+      '<table>' + fieldRows(b.fields) + '</table>';
+    (b.extraSections || []).forEach(function (sec) {
+      html += '<div class="brief-sub">' + esc(sec.heading) + '</div><table>' + fieldRows(sec.rows) + '</table>';
+    });
+    (b.bulletGroups || []).forEach(function (grp) {
+      html += '<div class="brief-sub">' + esc(grp.heading) + '</div><ul>' +
+        grp.items.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') + '</ul>';
+    });
+    if (b.note) html += '<p>' + esc(b.note) + '</p>';
+    html += '</div></div>';
+    return html;
+  }
+
+  function renderReference(task) {
+    if (!task.reference) return '';
+    var r = task.reference;
+    return '<details class="reference"><summary>' + esc(r.label) + '</summary>' +
+      '<div class="reference-body"><div class="row-actions">' +
+      '<button type="button" class="ghost" data-action="copy-reference" data-task="' + task.id + '">Salin Referensi</button>' +
+      '</div><div class="instruction"><p style="white-space:pre-wrap;margin:0;">' + esc(r.text) + '</p></div></div></details>';
+  }
+
+  function renderTaskCard(task) {
+    var status = taskStatus(task);
+    var isOpen = openCard === task.id;
+    var statusLabel = status === 'running' ? 'Berjalan' : status === 'done' ? 'Selesai' : 'Belum dikerjakan';
+    var elapsedMs = running[task.id] ? (Date.now() - running[task.id]) : 0;
+
+    var cvHtml = '';
+    if (task.needsCV) {
+      var cvRows = CANDIDATES.map(function (c) {
+        return '<tr><td>' + esc(c.name) + '</td><td style="text-align:right;">' +
+          '<button type="button" class="ghost" data-action="download-cv" data-slug="' + c.slug + '">Unduh</button></td></tr>';
+      }).join('');
+      cvHtml =
+        '<div class="cv-box">' +
+        '<div class="label">CV Kandidat (contoh, ' + CANDIDATES.length + ' orang)</div>' +
+        '<div class="row-actions">' +
+        '<button type="button" class="primary" data-action="download-all-cv">Unduh Semua (' + CANDIDATES.length + ' CV)</button>' +
+        '</div>' +
+        '<div class="cv-list"><table>' + cvRows + '</table></div>' +
+        '</div>';
+    }
+
+    var criteriaHtml = task.criteria.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('');
+
+    var timerBtn = running[task.id]
+      ? '<button type="button" class="stop" data-action="stop" data-task="' + task.id + '">Stop</button>'
+      : '<button type="button" class="primary" data-action="start" data-task="' + task.id + '">Mulai</button>';
+
+    var timerClass = running[task.id] ? 'running' : (status === 'done' ? 'done' : '');
+
+    return (
+      '<div class="task-card' + (isOpen ? ' open' : '') + '" data-card="' + task.id + '">' +
+      '<div class="task-head" data-action="toggle" data-task="' + task.id + '">' +
+      '<span class="task-id">' + task.id + '</span>' +
+      '<span class="task-title">' + esc(task.title) + '</span>' +
+      '<span class="task-status ' + status + '">' + statusLabel + '</span>' +
+      '<span class="chevron">&#9656;</span>' +
+      '</div>' +
+      '<div class="task-body">' +
+      '<div class="instruction"><p>' + esc(task.instruction) + '</p><ul>' + criteriaHtml + '</ul></div>' +
+      renderBrief(task) +
+      renderReference(task) +
+      cvHtml +
+      '<div class="timer-row">' +
+      '<span class="timer-display ' + timerClass + '" data-timer="' + task.id + '">' + fmtElapsed(elapsedMs) + '</span>' +
+      timerBtn +
+      '</div>' +
+      '</div></div>'
+    );
+  }
+
+  function renderLogRows() {
+    if (!STATE.logs.length) {
+      return '<tr><td colspan="4" class="empty-row">Belum ada pengerjaan yang tercatat.</td></tr>';
+    }
+    return STATE.logs.slice(0, 50).map(function (l) {
+      return '<tr><td>' + esc(l.participant) + '</td><td class="mono">' + esc(l.taskId) + '</td>' +
+        '<td class="mono">' + fmtElapsed(l.durationSec * 1000) + '</td><td>' + fmtWhen(l.endedAt) + '</td></tr>';
+    }).join('');
+  }
+
+  function renderUI() {
+    var participant = getParticipant();
+    root.innerHTML =
+      '<div class="shell">' +
+      '<header class="masthead">' +
+      '<span class="eyebrow">Rocky HR &middot; Usability Test Runner</span>' +
+      '<h1>Kerjakan Task Usability Test</h1>' +
+      '<p class="subtitle">Pilih task, baca instruksinya, jalankan timer selama Anda mengerjakannya di Rocky, lalu klik Stop saat selesai.</p>' +
+      '<div class="participant-box">' +
+      '<label for="participant-input">Nama/ID Partisipan</label>' +
+      '<input id="participant-input" type="text" placeholder="mis. P01 — Budi" value="' + esc(participant) + '">' +
+      '</div>' +
+      '</header>' +
+      '<h2 class="sec-title">Daftar Task</h2>' +
+      TASKS.map(renderTaskCard).join('') +
+      '<h2 class="sec-title">Riwayat Pengerjaan</h2>' +
+      '<div class="table-wrap"><table><thead><tr><th>Partisipan</th><th>Task</th><th>Durasi</th><th>Selesai</th></tr></thead>' +
+      '<tbody id="log-body">' + renderLogRows() + '</tbody></table></div>' +
+      '<div id="capability-note"></div>' +
+      '<footer class="doc-footer">Rocky HR &middot; Usability Test Runner</footer>' +
+      '</div>' +
+      '<div class="toast" id="toast"></div>';
+
+    attachHandlers();
+    checkCapabilities();
+  }
+
+  function attachHandlers() {
+    var input = document.getElementById('participant-input');
+    if (input) {
+      input.addEventListener('input', function () {
+        setParticipantStorage(input.value);
+        renderStatusesOnly();
+      });
+    }
+    root.addEventListener('click', onRootClick);
+  }
+
+  function renderStatusesOnly() {
+    TASKS.forEach(function (task) {
+      var card = root.querySelector('[data-card="' + task.id + '"]');
+      if (!card) return;
+      var badge = card.querySelector('.task-status');
+      if (!badge) return;
+      var status = taskStatus(task);
+      badge.className = 'task-status ' + status;
+      badge.textContent = status === 'running' ? 'Berjalan' : status === 'done' ? 'Selesai' : 'Belum dikerjakan';
+    });
+  }
+
+  function onRootClick(e) {
+    var el = e.target.closest('[data-action]');
+    if (!el) return;
+    var action = el.getAttribute('data-action');
+    var taskId = el.getAttribute('data-task');
+
+    if (action === 'toggle') {
+      openCard = openCard === taskId ? null : taskId;
+      renderUI();
+      return;
+    }
+    if (action === 'copy-brief') {
+      var taskB = TASKS.filter(function (t) { return t.id === taskId; })[0];
+      if (taskB && taskB.brief) copyText(taskB.brief.copyText);
+      return;
+    }
+    if (action === 'copy-reference') {
+      var taskR = TASKS.filter(function (t) { return t.id === taskId; })[0];
+      if (taskR && taskR.reference) copyText(taskR.reference.text);
+      return;
+    }
+    if (action === 'start') { startTimer(taskId); return; }
+    if (action === 'stop') { stopTimer(taskId); return; }
+    if (action === 'download-cv') { downloadCV(el.getAttribute('data-slug')); return; }
+    if (action === 'download-all-cv') { downloadAllCV(el); return; }
+  }
+
+  function startTimer(taskId) {
+    var participant = getParticipant().trim();
+    if (!participant) {
+      toast('Isi nama/ID partisipan dulu sebelum mulai.');
+      var input = document.getElementById('participant-input');
+      if (input) input.focus();
+      return;
+    }
+    running[taskId] = Date.now();
+    persistRunning();
+    openCard = taskId;
+    renderUI();
+    ensureTicking();
+  }
+
+  function stopTimer(taskId) {
+    var startedAt = running[taskId];
+    if (!startedAt) return;
+    delete running[taskId];
+    persistRunning();
+
+    var durationSec = Math.max(1, Math.round((Date.now() - startedAt) / 1000));
+    var entry = {
+      id: 'log-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8),
+      participant: getParticipant().trim() || 'Anonim',
+      taskId: taskId,
+      durationSec: durationSec,
+      endedAt: new Date().toISOString()
+    };
+    STATE.logs.unshift(entry);
+    renderUI();
+    toast('Task ' + taskId + ' selesai — ' + fmtElapsed(durationSec * 1000));
+    persistLog();
+  }
+
+  function persistLog() {
+    if (!window.claude || typeof window.claude.use !== 'function') return;
+    window.claude.use('artifact').then(function (artifact) {
+      if (!artifact) return;
+      return artifact.publish(renderPage(STATE));
+    }).catch(function (err) {
+      if (err && err.code === 'conflict') return;
+      toast('Gagal menyimpan log bersama (' + (err && err.code) + ').');
+    });
+  }
+
+  function findCandidate(slug) {
+    return CANDIDATES.filter(function (c) { return c.slug === slug; })[0];
+  }
+
+  function triggerBlobDownload(filename, text) {
+    var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = filename; a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+  }
+
+  function downloadCV(slug) {
+    var c = findCandidate(slug);
+    if (!c) return;
+    triggerBlobDownload(c.filename, c.cvText);
+    toast('CV ' + c.name + ' diunduh.');
+  }
+
+  function downloadAllCV(btn) {
+    if (btn) { btn.disabled = true; btn.textContent = 'Mengunduh...'; }
+    CANDIDATES.forEach(function (c, i) {
+      setTimeout(function () {
+        triggerBlobDownload(c.filename, c.cvText);
+        if (i === CANDIDATES.length - 1) {
+          toast('Semua ' + CANDIDATES.length + ' CV diunduh.');
+          if (btn) { btn.disabled = false; btn.textContent = 'Unduh Semua (' + CANDIDATES.length + ' CV)'; }
+        }
+      }, i * 250);
+    });
+  }
+
+  function copyText(text, okMsg) {
+    okMsg = okMsg || 'Tersalin ke clipboard.';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { toast(okMsg); })
+        .catch(function () { fallbackCopy(text, okMsg); });
+    } else {
+      fallbackCopy(text, okMsg);
+    }
+  }
+  function fallbackCopy(text, okMsg) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand('copy'); toast(okMsg || 'Tersalin ke clipboard.'); } catch (e) { toast('Gagal menyalin.'); }
+    document.body.removeChild(ta);
+  }
+
+  var toastTimer = null;
+  function toast(msg) {
+    var el = document.getElementById('toast');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2600);
+  }
+
+  function ensureTicking() {
+    if (tickInterval) return;
+    tickInterval = setInterval(function () {
+      var anyRunning = false;
+      Object.keys(running).forEach(function (taskId) {
+        anyRunning = true;
+        var el = root.querySelector('[data-timer="' + taskId + '"]');
+        if (el) el.textContent = fmtElapsed(Date.now() - running[taskId]);
+      });
+      if (!anyRunning) { clearInterval(tickInterval); tickInterval = null; }
+    }, 1000);
+  }
+
+  function checkCapabilities() {
+    var note = document.getElementById('capability-note');
+    if (!note) return;
+    if (!window.claude || typeof window.claude.use !== 'function') {
+      note.innerHTML = '<div class="note">Log bersama tidak aktif di tampilan ini — durasi tetap tercatat, tapi hanya untuk sesi ini.</div>';
+      return;
+    }
+    window.claude.use('artifact').then(function (a) {
+      if (!a) note.innerHTML = '<div class="note">Log bersama tidak aktif di tampilan ini — durasi tetap tercatat, tapi hanya untuk sesi ini.</div>';
+    });
+  }
+
+  function renderPage(state) {
+    var json = JSON.stringify(state).replace(/</g, '\\u003c');
+    var headExtra = document.getElementById('page-style') ? document.getElementById('page-style').outerHTML : '';
+    return '<!doctype html><html lang="id"><head>' +
+      '<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">' +
+      '<title>Rocky HR Test Runner</title>' + headExtra +
+      '</head><body><div id="root"></div>' +
+      '<script type="application/json" id="state-data">' + json + '<\/script>' +
+      '<script>' + SELF_SRC + '<\/script>' +
+      '</body></html>';
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderUI);
+  } else {
+    renderUI();
+  }
+  if (Object.keys(running).length) ensureTicking();
+})();
+  </script>
+</body>
+</html>
