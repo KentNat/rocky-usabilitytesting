@@ -149,128 +149,135 @@
 
   var TASKS = [
     { id: 'UT-01', title: 'Onboarding Pertama Kali', needsCV: false,
-      instruction: 'Anda adalah recruiter baru di Cakra AI, perusahaan yang baru mulai memakai Rocky. Siapkan akun perusahaan sampai Rocky siap dipakai untuk rekrutmen pertama.',
-      criteria: ['Menyelesaikan setup akun & informasi perusahaan.', 'Melengkapi informasi AI interviewer/bot.', 'Mencapai lingkungan kerja Rocky.'],
+      instruction: 'Anda adalah recruiter baru di Cakra AI, perusahaan yang baru mulai memakai Rocky. Siapkan akun perusahaan sampai Rocky siap dipakai untuk rekrutmen pertama (termasuk setup Parameter CV & Interview Assessment yang muncul otomatis di akhir).',
+      criteria: ['Mengisi form akun (Step 1) & Company Info (Step 2).', 'Mengisi form Bot Info (Step 3) sesuai pilihan dropdown yang tersedia.', 'Melalui setup Parameter CV & Interview Assessment (boleh pilih mode "Mulai dari Nol" agar cepat).', 'Mencapai dashboard Rocky.'],
       brief: {
-        label: 'Data Perusahaan — isi ke form onboarding',
+        label: 'Field Form — Step 2 "Company Info" (persis field yang ada di form)',
         fields: [
-          ['Nama perusahaan', 'Cakra AI (PT Cakra Tekno Nusantara)'],
-          ['Industri', 'Teknologi AI — Integrated AI Solutions'],
-          ['Website', 'cakra.ai'],
-          ['Alamat kantor', 'Panin Tower Senayan City, Lt. 15, Jl. Asia Afrika LOT 19, Jakarta Pusat, DKI Jakarta 10270'],
-          ['Tipe kerja', 'Hybrid'],
-          ['Deskripsi singkat', 'Cakra AI adalah perusahaan teknologi AI di Indonesia yang membangun solusi AI terintegrasi untuk otomasi rekrutmen, produktivitas meeting, dan optimasi bisnis.'],
-          ['Kontak HR/PIC', 'Tim People & Culture — Cakra AI (people.demo@cakra-ai-test.example)']
+          ['Nama perusahaan', 'Cakra AI'],
+          ['Industri (dropdown)', 'Teknologi'],
+          ['Jumlah karyawan (dropdown)', '51-200 — perkiraan, jumlah asli belum dipublikasikan resmi'],
+          ['Website (opsional)', 'cakra.ai']
         ],
         extraSections: [
-          { heading: 'Konfigurasi AI Interviewer', rows: [
-            ['Nama', 'Nova'],
-            ['Bahasa default', 'Bahasa Indonesia'],
-            ['Durasi interview default', '20 menit'],
-            ['Perkenalan singkat', 'Halo, saya Nova, AI interviewer dari Cakra AI. Saya akan menemani Anda menjawab beberapa pertanyaan seputar pengalaman dan cara berpikir Anda dalam bekerja.']
+          { heading: 'Step 3 "Bot Info" (persis field yang ada di form)', rows: [
+            ['Nama AI interviewer', 'Nova'],
+            ['Gaya bicara bot (dropdown)', 'Profesional'],
+            ['Bahasa wawancara (dropdown)', 'Bahasa Indonesia'],
+            ['Durasi wawancara (dropdown)', '20 menit']
           ] }
         ],
-        copyText: 'DATA PERUSAHAAN (Cakra AI)\n' +
-          'Nama perusahaan: Cakra AI (PT Cakra Tekno Nusantara)\n' +
-          'Industri: Teknologi AI — Integrated AI Solutions\n' +
-          'Website: cakra.ai\n' +
-          'Alamat kantor: Panin Tower Senayan City, Lt. 15, Jl. Asia Afrika LOT 19, Jakarta Pusat, DKI Jakarta 10270\n' +
-          'Tipe kerja: Hybrid\n' +
-          'Deskripsi singkat: Cakra AI adalah perusahaan teknologi AI di Indonesia yang membangun solusi AI terintegrasi untuk otomasi rekrutmen, produktivitas meeting, dan optimasi bisnis.\n' +
-          'Kontak HR/PIC: Tim People & Culture — Cakra AI (people.demo@cakra-ai-test.example)\n\n' +
-          'KONFIGURASI AI INTERVIEWER\n' +
-          'Nama: Nova\n' +
-          'Bahasa default: Bahasa Indonesia\n' +
-          'Durasi interview default: 20 menit\n' +
-          'Perkenalan singkat: Halo, saya Nova, AI interviewer dari Cakra AI. Saya akan menemani Anda menjawab beberapa pertanyaan seputar pengalaman dan cara berpikir Anda dalam bekerja.'
+        note: 'Dropdown Industri hanya berisi: Teknologi, Keuangan, Kesehatan, Retail, Manufaktur, Pendidikan, Lainnya. Dropdown Jumlah karyawan hanya berisi: 1-10, 11-50, 51-200, 201-500, 500+. Dropdown Gaya bicara bot hanya berisi: Profesional, Ramah, Formal. Dropdown Bahasa wawancara hanya berisi: Bahasa Indonesia, English. Dropdown Durasi wawancara hanya berisi: 15 menit, 20 menit, 30 menit. Konteks (bukan field formulir, sekadar info): Cakra AI (PT Cakra Tekno Nusantara) — Panin Tower Senayan City, Jakarta Pusat — membangun Rocky, Sygma, Meetha, Becky, Genits.',
+        copyText: 'STEP 2 — COMPANY INFO\n' +
+          'Nama perusahaan: Cakra AI\n' +
+          'Industri: Teknologi\n' +
+          'Jumlah karyawan: 51-200\n' +
+          'Website (opsional): cakra.ai\n\n' +
+          'STEP 3 — BOT INFO\n' +
+          'Nama AI interviewer: Nova\n' +
+          'Gaya bicara bot: Profesional\n' +
+          'Bahasa wawancara: Bahasa Indonesia\n' +
+          'Durasi wawancara: 20 menit\n\n' +
+          'Setelah Step 3, akan ada wizard wajib "Parameter CV & Interview Assessment" — pilih mode "Mulai dari Nol" di kedua step untuk lanjut paling cepat.'
       } },
-    { id: 'UT-02', title: 'Membuat Lowongan', needsCV: false,
-      instruction: 'Cakra AI sedang mencari AI Engineer. Buat lowongan baru sesuai hiring brief di bawah.',
-      criteria: ['Mengisi requirement (wajib vs nice-to-have) & tipe kerja.', 'Membuat/mengisi deskripsi pekerjaan.', 'Menyimpan lowongan.'],
+    { id: 'UT-02', title: 'Membuat Lowongan (Step 1–2)', needsCV: false,
+      instruction: 'Cakra AI sedang mencari AI Engineer. Isi Step 1 "Persyaratan & Detail Kerja" dan Step 2 "Deskripsi" di wizard "+ New Job" sesuai brief di bawah.',
+      criteria: ['Mengisi Step 1: Judul, persyaratan kerja, dan detail kerja.', 'Mengisi rentang gaji & benefit.', 'Mengisi Step 2: deskripsi pekerjaan, status, dan jumlah slot.'],
       brief: {
-        label: 'Job Requirement Brief — AI Engineer',
+        label: 'Field Form — Step 1 "Persyaratan & Detail Kerja" (persis field yang ada)',
         fields: [
-          ['Posisi', 'AI Engineer'],
-          ['Departemen', 'AI Engineering'],
-          ['Melapor ke', 'Head of AI Engineering'],
-          ['Tipe kerja', 'Full-time, permanen'],
-          ['Lokasi', 'Jakarta Selatan (Hybrid, 3 hari WFO)'],
-          ['Pengalaman', '2–5 tahun di bidang machine learning / data engineering'],
-          ['Target mulai kerja', 'Secepatnya, maksimal 6 minggu setelah offer diterima']
+          ['Judul Pekerjaan', 'AI Engineer'],
+          ['Jenis Kelamin (radio)', 'Tanpa Preferensi'],
+          ['Usia', 'Centang "Tidak ada batasan umur"'],
+          ['Skill Wajib (dipisah koma)', 'Python, Machine Learning, PyTorch, SQL'],
+          ['Pendidikan Minimal (dropdown)', 'S1'],
+          ['Pengalaman Kerja (dropdown)', 'Mid-level'],
+          ['Tipe Kerja (radio)', 'Penuh Waktu'],
+          ['Sistem Kerja (radio)', 'Hybrid'],
+          ['Rentang Gaji Bulanan', 'Rp 18.000.000 – Rp 28.000.000'],
+          ['Benefit (chip, pilih beberapa)', 'BPJS Kesehatan, BPJS Tenaga Kerja, Bonus Kinerja, Jenjang Karir, Pelatihan/Sertifikasi']
         ],
-        bulletGroups: [
-          { heading: 'Kualifikasi wajib (must-have)', items: [
-            'Menguasai Python untuk data science/ML.',
-            'Familiar dengan minimal satu framework ML (PyTorch atau TensorFlow).',
-            'Terbiasa menulis query SQL untuk eksplorasi data.',
-            'Pernah men-deploy model ke lingkungan production (cloud apa pun).',
-            'Bisa bekerja dalam tim lintas fungsi.'
-          ] },
-          { heading: 'Nilai tambah (nice-to-have)', items: [
-            'Pengalaman LLM/NLP (fine-tuning, prompt engineering, RAG).',
-            'Familiar dengan praktik MLOps.',
-            'Pengalaman Docker/Kubernetes.',
-            'Pernah bekerja di startup dengan skala data besar.'
+        extraSections: [
+          { heading: 'Step 2 "Deskripsi" (persis field yang ada)', rows: [
+            ['Deskripsi Job', 'Tulis manual atau klik tombol "Buat dengan AI" — lihat referensi di bawah kalau butuh contoh'],
+            ['Status (dropdown)', 'Open'],
+            ['Jumlah Slot', '1']
           ] }
         ],
-        note: 'Tentang Cakra AI: membangun rangkaian produk AI terintegrasi — Rocky, Sygma, Meetha, Becky, dan Genits — yang sudah dipercaya 100+ perusahaan di Indonesia. Tim AI Engineering menangani model machine learning di balik produk-produk tersebut.',
-        copyText: 'RINGKASAN LOWONGAN\n' +
-          'Posisi: AI Engineer\nDepartemen: AI Engineering\nMelapor ke: Head of AI Engineering\n' +
-          'Tipe kerja: Full-time, permanen\nLokasi: Jakarta Selatan (Hybrid, 3 hari WFO)\n' +
-          'Pengalaman: 2–5 tahun di bidang machine learning / data engineering\n' +
-          'Target mulai kerja: Secepatnya, maksimal 6 minggu setelah offer diterima\n\n' +
-          'KUALIFIKASI WAJIB\n- Menguasai Python untuk data science/ML.\n- Familiar dengan minimal satu framework ML (PyTorch atau TensorFlow).\n' +
-          '- Terbiasa menulis query SQL untuk eksplorasi data.\n- Pernah men-deploy model ke lingkungan production (cloud apa pun).\n- Bisa bekerja dalam tim lintas fungsi.\n\n' +
-          'NILAI TAMBAH\n- Pengalaman LLM/NLP (fine-tuning, prompt engineering, RAG).\n- Familiar dengan praktik MLOps.\n- Pengalaman Docker/Kubernetes.\n- Pernah bekerja di startup dengan skala data besar.\n\n' +
-          'TENTANG CAKRA AI\nCakra AI membangun rangkaian produk AI terintegrasi — Rocky, Sygma, Meetha, Becky, dan Genits — yang sudah dipercaya 100+ perusahaan di Indonesia. Tim AI Engineering menangani model machine learning di balik produk-produk tersebut.'
+        note: 'Dropdown Pendidikan Minimal hanya berisi: SMA/SMK, D3, S1, S2. Dropdown Pengalaman Kerja hanya berisi: Entry-level, Mid-level, Senior, Lead. Pilihan Tipe Kerja: Penuh Waktu, Paruh Waktu, Magang, Freelance, Kontrak. Pilihan Sistem Kerja: Di Kantor, Remote/Dari Rumah, Hybrid. Daftar lengkap Benefit yang bisa dipilih: BPJS Kesehatan, BPJS Tenaga Kerja, Uang Transport, Uang Makan, Tunjangan Hari Raya, Bonus Kinerja, Bonus Tahunan, Jenjang Karir, Pelatihan/Sertifikasi, Asuransi Tambahan. Field ini tidak memisahkan "wajib" vs "nice-to-have" — hanya satu kolom Skill Wajib.',
+        copyText: 'STEP 1 — PERSYARATAN & DETAIL KERJA\n' +
+          'Judul Pekerjaan: AI Engineer\nJenis Kelamin: Tanpa Preferensi\nUsia: Tidak ada batasan umur\n' +
+          'Skill Wajib: Python, Machine Learning, PyTorch, SQL\nPendidikan Minimal: S1\nPengalaman Kerja: Mid-level\n' +
+          'Tipe Kerja: Penuh Waktu\nSistem Kerja: Hybrid\nRentang Gaji: Rp 18.000.000 – Rp 28.000.000\n' +
+          'Benefit: BPJS Kesehatan, BPJS Tenaga Kerja, Bonus Kinerja, Jenjang Karir, Pelatihan/Sertifikasi\n\n' +
+          'STEP 2 — DESKRIPSI\nDeskripsi Job: (tulis manual atau pakai tombol Buat dengan AI)\nStatus: Open\nJumlah Slot: 1'
       },
       reference: {
-        label: 'Referensi: Contoh Deskripsi Pekerjaan (buka kalau butuh)',
+        label: 'Referensi: Contoh Deskripsi Pekerjaan (buka kalau butuh, untuk field Deskripsi Job)',
         text: 'AI Engineer — Cakra AI\n\n' +
           'Cakra AI membangun rangkaian produk AI terintegrasi — Rocky, Sygma, Meetha, Becky, dan Genits — yang sudah dipercaya oleh 100+ perusahaan dan organisasi di Indonesia. Kami mencari AI Engineer untuk bergabung dengan tim AI Engineering yang menangani model machine learning di balik produk-produk tersebut.\n\n' +
           'Yang akan Anda lakukan:\n- Membangun, melatih, dan men-deploy model machine learning untuk kebutuhan produk Cakra AI.\n- Memelihara dan meningkatkan performa model yang sudah berjalan di production.\n- Berkolaborasi dengan tim data engineering untuk memastikan kualitas data pipeline.\n- Berkolaborasi dengan tim product untuk menerjemahkan kebutuhan bisnis klien menjadi solusi model.\n\n' +
           'Yang kami cari:\n- 2–5 tahun pengalaman di machine learning/data engineering.\n- Mahir Python, familiar PyTorch atau TensorFlow.\n- Terbiasa dengan SQL dan eksplorasi data skala besar.\n- Pernah men-deploy model ke production.\n- Nilai tambah: pengalaman LLM/NLP/RAG, MLOps, Docker/Kubernetes.\n\n' +
           'Yang kami tawarkan:\n- Kerja hybrid, kantor di Panin Tower Senayan City, Jakarta Pusat.\n- Kesempatan kerja lintas produk AI yang sudah dipakai 100+ perusahaan.\n- Tim kecil, flat, engineer terlibat penuh dari eksperimen sampai deployment.'
       } },
-    { id: 'UT-03', title: 'Mengatur Penilaian Kandidat', needsCV: false,
-      instruction: 'Role AI Engineer membutuhkan kemampuan teknis kuat. Atur penilaian kandidat agar hal itu jadi prioritas.',
-      criteria: ['Memilih parameter relevan & menyesuaikan bobot.', 'Menyimpan konfigurasi penilaian.'] },
-    { id: 'UT-04', title: 'Mengatur Interview AI', needsCV: false,
-      instruction: 'Siapkan interview AI berdurasi ~20 menit untuk role AI Engineer sesuai interview brief di bawah.',
-      criteria: ['Menentukan durasi, bahasa, dan kriteria/prioritas interview.', 'Memahami bahwa "Pengaman Pertanyaan Bot" bersifat opsional.', 'Menyimpan konfigurasi.'],
+    { id: 'UT-03', title: 'Mengatur Penilaian Kandidat (Analisis CV)', needsCV: false,
+      instruction: 'Role AI Engineer membutuhkan kemampuan teknis kuat. Di Step 3 "Analisis CV" pada wizard job, pilih minimal 3 parameter dan atur level-nya sesuai pertimbangan Anda sendiri untuk role ini.',
+      criteria: ['Memilih minimal 3 parameter CV Assessment dari daftar tersedia.', 'Mengatur level tiap parameter lewat 4 kartu prioritas.', 'Menyimpan konfigurasi (lanjut ke step berikutnya).'],
       brief: {
-        label: 'Interview Requirement Brief — AI Engineer',
+        label: 'Cara Kerja Step 3 "Analisis CV" (mekanisme asli, bukan rekomendasi jawaban)',
         fields: [
-          ['Durasi interview', '~20 menit'],
-          ['Bahasa yang diizinkan', 'Bahasa Indonesia dan Bahasa Inggris'],
-          ['Fokus utama', 'Problem-solving teknis ML, pengalaman deployment, cara berpikir menghadapi data bermasalah'],
-          ['Fokus sekunder', 'Komunikasi — menjelaskan hal teknis ke non-teknis']
+          ['Jumlah parameter minimal', '3 parameter'],
+          ['Cara atur level', 'Klik parameter → muncul 4 kartu level → pilih salah satu'],
+          ['4 level yang tersedia', 'Sangat Baik, Baik, Cukup, Sedang (bukan Tinggi/Sedang/Rendah)'],
+          ['Kalau parameter yang dibutuhkan belum ada', 'Tombol "+ Buat parameter baru" di bagian bawah']
         ],
         bulletGroups: [
-          { heading: 'Kriteria / prioritas interview', items: [
-            '[Tinggi] Problem-solving teknis: bagaimana kandidat mendekati masalah ML yang ambigu.',
-            '[Tinggi] Pengalaman nyata: kedalaman cerita tentang proyek ML yang pernah dikerjakan.',
-            '[Sedang] Komunikasi: kejelasan menjelaskan konsep teknis.',
-            '[Rendah] Pengetahuan umum industri AI.'
+          { heading: '8 parameter CV Assessment yang tersedia di database', items: [
+            'Technical Skill', 'Experience', 'Education', 'Person to Job Fit',
+            'Writing', 'Managerial Role', 'Impact', 'Language Level'
           ] }
         ],
-        note: 'Bot interviewer Rocky sudah otomatis menyusun pertanyaan relevan sendiri — bagian "Pengaman Pertanyaan Bot" opsional, bukan wajib diisi.',
-        copyText: 'KEBUTUHAN INTERVIEW\nDurasi: ~20 menit\nBahasa yang diizinkan: Bahasa Indonesia dan Bahasa Inggris\n' +
-          'Fokus utama: Problem-solving teknis ML, pengalaman deployment, cara berpikir menghadapi data bermasalah\n' +
-          'Fokus sekunder: Komunikasi — menjelaskan hal teknis ke non-teknis\n\n' +
-          'KRITERIA / PRIORITAS INTERVIEW\n1. [Tinggi] Problem-solving teknis\n2. [Tinggi] Pengalaman nyata proyek ML\n3. [Sedang] Komunikasi\n4. [Rendah] Pengetahuan umum industri AI'
+        note: 'Daftar di atas adalah SEMUA parameter yang tersedia untuk dipilih — bukan saran mana yang harus dipakai untuk role AI Engineer. Menentukan parameter mana yang relevan dan level berapa yang sesuai adalah bagian dari task ini.',
+        copyText: 'CARA KERJA STEP 3 — ANALISIS CV\n' +
+          'Minimal 3 parameter harus dipilih.\n' +
+          'Level diatur lewat 4 kartu: Sangat Baik, Baik, Cukup, Sedang.\n\n' +
+          '8 PARAMETER TERSEDIA DI DATABASE\n' +
+          'Technical Skill, Experience, Education, Person to Job Fit, Writing, Managerial Role, Impact, Language Level'
+      } },
+    { id: 'UT-04', title: 'Mengatur Interview AI (Analisis Interview)', needsCV: false,
+      instruction: 'Di Step 4 "Analisis Interview" pada wizard job, atur durasi & bahasa wawancara, lalu pilih minimal 3 parameter kriteria interview untuk role AI Engineer sesuai pertimbangan Anda sendiri.',
+      criteria: ['Mengisi durasi wawancara (angka bebas, default 20).', 'Menambahkan bahasa yang diizinkan lewat chip picker.', 'Memilih minimal 3 parameter Interview Assessment & mengatur level-nya.', 'Memahami bahwa "Pengaman Pertanyaan Bot" (Step 6) bersifat opsional.'],
+      brief: {
+        label: 'Field Form — Step 4 "Analisis Interview" (persis field yang ada)',
+        fields: [
+          ['Durasi wawancara (menit)', '20 — kolom angka bebas, bukan dropdown, default 20, minimal 5'],
+          ['Bahasa yang diizinkan (chip, tambah dari dropdown)', 'English, Indonesia'],
+          ['Jumlah parameter minimal', '3 parameter'],
+          ['Cara atur level', 'Sama seperti Analisis CV: klik parameter → 4 kartu level (Sangat Baik, Baik, Cukup, Sedang)']
+        ],
+        bulletGroups: [
+          { heading: '18 parameter Interview Assessment yang tersedia di database', items: [
+            'Communication', 'Qualification', 'Adaptability', 'Ethical Decision', 'Cultural Fit',
+            'Industry Knowledge', 'Leadership Potential', 'Customer Orientation', 'Relevant Experience',
+            'Problem Solving', 'Innovation', 'Technical Proficiency', 'Time Management',
+            'Professional Growth', 'Teamwork', 'Stress Management', 'Conflict Resolution', 'Critical Thinking'
+          ] }
+        ],
+        note: 'Pilihan bahasa lengkap yang tersedia di chip picker: English, Indonesia, Mandarin, Spanish, Japanese, Korean, Arabic, French. Daftar 18 parameter di atas adalah SEMUA yang tersedia — bukan saran mana yang harus dipakai. Bot interviewer Rocky sudah otomatis menyusun pertanyaan sendiri dari deskripsi pekerjaan & hasil analisis CV — Step 6 "Pengaman Pertanyaan Bot" opsional, bukan wajib diisi.',
+        copyText: 'FIELD STEP 4 — ANALISIS INTERVIEW\n' +
+          'Durasi wawancara: 20 menit\nBahasa yang diizinkan: English, Indonesia\n' +
+          'Minimal 3 parameter, level diatur lewat 4 kartu: Sangat Baik, Baik, Cukup, Sedang.\n\n' +
+          '18 PARAMETER TERSEDIA DI DATABASE\n' +
+          'Communication, Qualification, Adaptability, Ethical Decision, Cultural Fit, Industry Knowledge, Leadership Potential, Customer Orientation, Relevant Experience, Problem Solving, Innovation, Technical Proficiency, Time Management, Professional Growth, Teamwork, Stress Management, Conflict Resolution, Critical Thinking'
       },
       reference: {
-        label: 'Referensi: Contoh Kriteria & Pertanyaan Screening (buka kalau butuh)',
-        text: 'CONTOH KRITERIA\n- Problem-solving teknis — bobot disarankan: Tinggi (inti pekerjaan AI Engineer sehari-hari)\n' +
-          '- Kedalaman pengalaman proyek nyata — bobot disarankan: Tinggi (membedakan kandidat "tahu teori" vs "pernah kerjakan")\n' +
-          '- Komunikasi teknis — bobot disarankan: Sedang (penting untuk kolaborasi lintas tim)\n' +
-          '- Pengetahuan tren industri AI — bobot disarankan: Rendah (bagus dimiliki, bukan penentu utama)\n\n' +
-          'CONTOH PERTANYAAN SCREENING (opsional, hanya jika ingin menambah manual)\n' +
-          '1. Ceritakan proyek machine learning paling menantang yang pernah Anda kerjakan. Apa yang membuatnya sulit?\n' +
-          '2. Bagaimana Anda memastikan model tetap akurat setelah di-deploy ke production dalam jangka panjang?\n' +
-          '3. Pernahkah Anda menjelaskan hasil model ML ke tim non-teknis? Bagaimana caranya?\n' +
-          '4. Apa yang Anda lakukan ketika data untuk melatih model ternyata kotor/tidak lengkap?'
+        label: 'Referensi: Pertanyaan default "Pengaman Pertanyaan Bot" (Step 6, sudah terisi otomatis)',
+        text: 'Rocky sudah mengisi 5 pertanyaan default ini secara otomatis di Step 6 — Anda tidak wajib menambah apa pun, cukup lanjut kalau sudah cukup:\n\n' +
+          '1. Ceritakan pengalaman kerja Anda yang paling relevan dengan posisi ini.\n' +
+          '2. Apa tantangan terbesar yang pernah Anda hadapi dalam pekerjaan sebelumnya, dan bagaimana Anda mengatasinya?\n' +
+          '3. Mengapa Anda tertarik melamar posisi ini di perusahaan kami?\n' +
+          '4. Ceritakan situasi saat Anda harus bekerja dalam tim untuk mencapai suatu target.\n' +
+          '5. Apa yang Anda ketahui tentang tanggung jawab utama posisi ini?'
       } },
     { id: 'UT-05', title: 'Upload & Screening Kandidat', needsCV: true,
       instruction: 'Lowongan menerima beberapa lamaran. Upload CV kandidat yang tersedia di bawah, lalu identifikasi siapa yang paling layak lanjut.',
