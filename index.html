@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rocky HR Test Runner</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
   (function () {
     try {
@@ -453,7 +454,7 @@
   CANDIDATES.forEach(function (c, i) {
     c.slug = slugify(c.name);
     c.cvText = buildCvText(c, i);
-    c.filename = 'CV-' + String(i + 1).padStart(2, '0') + '-' + c.slug + '.txt';
+    c.filename = 'CV-' + String(i + 1).padStart(2, '0') + '-' + c.slug + '.pdf';
   });
 
   var root = document.getElementById('root');
@@ -745,8 +746,8 @@
     return CANDIDATES.filter(function (c) { return c.slug === slug; })[0];
   }
 
-  function triggerBlobDownload(filename, text) {
-    var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  function triggerBlobDownload(filename, blobOrText, mime) {
+    var blob = (blobOrText instanceof Blob) ? blobOrText : new Blob([blobOrText], { type: mime || 'text/plain;charset=utf-8' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url; a.download = filename; a.style.display = 'none';
@@ -756,10 +757,47 @@
     setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
   }
 
+  function buildCvPdfBlob(c, i) {
+    var jsPDF = window.jspdf && window.jspdf.jsPDF;
+    if (!jsPDF) return null;
+    var doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    var margin = 50;
+    var maxWidth = doc.internal.pageSize.getWidth() - margin * 2;
+    var y = 60;
+
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(18); doc.setTextColor(20);
+    doc.text(c.name, margin, y); y += 22;
+
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(90);
+    doc.text(candidateEmail(c.name) + '   |   ' + candidatePhone(i), margin, y); y += 14;
+    doc.setTextColor(160);
+    doc.text('CV SINTETIS / DUMMY -- untuk keperluan usability testing', margin, y); y += 26;
+    doc.setTextColor(20);
+
+    function section(title, body) {
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(20);
+      doc.text(title, margin, y); y += 15;
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(50);
+      var lines = doc.splitTextToSize(body, maxWidth);
+      doc.text(lines, margin, y);
+      y += lines.length * 13 + 16;
+    }
+
+    section('RINGKASAN', c.summary);
+    section('PENDIDIKAN', c.edu);
+    section('PENGALAMAN KERJA', c.role + ' -- (' + c.years + ' tahun)\n' + c.work);
+    section('KEAHLIAN', c.skills);
+
+    return doc.output('blob');
+  }
+
   function downloadCV(slug) {
     var c = findCandidate(slug);
     if (!c) return;
-    triggerBlobDownload(c.filename, c.cvText);
+    var i = CANDIDATES.indexOf(c);
+    var pdf = buildCvPdfBlob(c, i);
+    if (!pdf) { toast('Gagal membuat PDF — coba muat ulang halaman.'); return; }
+    triggerBlobDownload(c.filename, pdf, 'application/pdf');
     toast('CV ' + c.name + ' diunduh.');
   }
 
@@ -767,7 +805,8 @@
     if (btn) { btn.disabled = true; btn.textContent = 'Mengunduh...'; }
     CANDIDATES.forEach(function (c, i) {
       setTimeout(function () {
-        triggerBlobDownload(c.filename, c.cvText);
+        var pdf = buildCvPdfBlob(c, i);
+        if (pdf) triggerBlobDownload(c.filename, pdf, 'application/pdf');
         if (i === CANDIDATES.length - 1) {
           toast('Semua ' + CANDIDATES.length + ' CV diunduh.');
           if (btn) { btn.disabled = false; btn.textContent = 'Unduh Semua (' + CANDIDATES.length + ' CV)'; }
