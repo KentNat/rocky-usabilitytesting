@@ -127,6 +127,8 @@
     text-decoration:underline;text-underline-offset:2px;
   }
   button.link-btn:hover{background:none;color:var(--ink);}
+  button.small{padding:4px 10px;font-size:12px;}
+  td.log-actions{text-align:right;white-space:nowrap;}
 
   .timer-row{display:flex;align-items:center;gap:12px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--border);}
   .timer-display{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums;font-size:22px;font-weight:600;min-width:76px;}
@@ -579,11 +581,12 @@
 
   function renderLogRows() {
     if (!STATE.logs.length) {
-      return '<tr><td colspan="4" class="empty-row">Belum ada pengerjaan yang tercatat.</td></tr>';
+      return '<tr><td colspan="5" class="empty-row">Belum ada pengerjaan yang tercatat.</td></tr>';
     }
     return STATE.logs.slice(0, 50).map(function (l) {
       return '<tr><td>' + esc(l.participant) + '</td><td class="mono">' + esc(l.taskId) + '</td>' +
-        '<td class="mono">' + fmtElapsed(l.durationSec * 1000) + '</td><td>' + fmtWhen(l.endedAt) + '</td></tr>';
+        '<td class="mono">' + fmtElapsed(l.durationSec * 1000) + '</td><td>' + fmtWhen(l.endedAt) + '</td>' +
+        '<td class="log-actions"><button type="button" class="ghost small" data-action="delete-log" data-log="' + esc(l.id) + '" aria-label="Hapus entri ini">Hapus</button></td></tr>';
     }).join('');
   }
 
@@ -627,7 +630,7 @@
       '<div class="log-head"><h2 class="sec-title" style="margin:0;">Riwayat Pengerjaan</h2>' +
       (STATE.logs.length ? '<button type="button" class="ghost" data-action="clear-logs">Hapus Riwayat</button>' : '') +
       '</div>' +
-      '<div class="table-wrap"><table><thead><tr><th>Partisipan</th><th>Task</th><th>Durasi</th><th>Selesai</th></tr></thead>' +
+      '<div class="table-wrap"><table><thead><tr><th>Partisipan</th><th>Task</th><th>Durasi</th><th>Selesai</th><th></th></tr></thead>' +
       '<tbody id="log-body">' + renderLogRows() + '</tbody></table></div>' +
       '<div id="capability-note"></div>' +
       '<footer class="doc-footer">Rocky HR &middot; Usability Test Runner</footer>' +
@@ -675,6 +678,7 @@
 
     if (action === 'toggle-theme') { toggleTheme(); return; }
     if (action === 'clear-logs') { clearLogs(); return; }
+    if (action === 'delete-log') { deleteLog(el.getAttribute('data-log')); return; }
     if (action === 'copy-value') {
       selectCellContents(el);
       copyText(el.textContent, 'Tersalin: ' + el.textContent);
@@ -714,6 +718,15 @@
     openCard = taskId;
     renderUI();
     ensureTicking();
+  }
+
+  function deleteLog(logId) {
+    var idx = STATE.logs.findIndex(function (l) { return l.id === logId; });
+    if (idx === -1) return;
+    STATE.logs.splice(idx, 1);
+    persistLog();
+    renderUI();
+    toast('Entri riwayat dihapus.');
   }
 
   function clearLogs() {
