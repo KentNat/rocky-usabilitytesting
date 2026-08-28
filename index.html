@@ -70,6 +70,7 @@
   }
   .participant-box input:focus{outline:2px solid var(--accent);outline-offset:1px;}
 
+  .app-intro{font-size:14.5px;line-height:1.6;color:var(--ink-soft);margin:22px 0 0;padding-top:22px;border-top:1px solid var(--border-soft);}
   h2.sec-title{font-family:'Source Serif 4',Georgia,serif;font-weight:600;font-size:19px;margin:32px 0 14px;}
   .log-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:32px 0 14px;}
   .log-head .sec-title{margin:0;}
@@ -620,6 +621,7 @@
       '<input id="participant-input" type="text" placeholder="mis. P01 — Budi" value="' + esc(participant) + '">' +
       '</div>' +
       '</header>' +
+      '<p class="app-intro">Rocky HR adalah platform rekrutmen berbasis AI yang membantu perusahaan menyaring CV, menjalankan wawancara kandidat secara otomatis, dan menilai kandidat berdasarkan kriteria yang bisa disesuaikan sendiri. Pada sesi ini Anda akan mencoba beberapa fitur utamanya sebagai seorang recruiter/HR, mulai dari membuat lowongan hingga meninjau hasil penilaian kandidat. Kerjakan setiap task sesuai pemahaman Anda sendiri &mdash; tidak ada langkah yang baku, yang ingin kami lihat adalah bagaimana Anda secara natural akan menyelesaikannya.</p>' +
       '<h2 class="sec-title">Daftar Task</h2>' +
       TASKS.map(renderTaskCard).join('') +
       '<div class="log-head"><h2 class="sec-title" style="margin:0;">Riwayat Pengerjaan</h2>' +
