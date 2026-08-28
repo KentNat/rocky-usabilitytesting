@@ -71,6 +71,10 @@
   .participant-box input:focus{outline:2px solid var(--accent);outline-offset:1px;}
 
   h2.sec-title{font-family:'Source Serif 4',Georgia,serif;font-weight:600;font-size:19px;margin:32px 0 14px;}
+  .log-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:32px 0 14px;}
+  .log-head .sec-title{margin:0;}
+  .log-head button{font-size:12px;padding:6px 12px;color:var(--warn);border-color:var(--warn);}
+  .log-head button:hover{background:var(--warn-soft);}
 
   .task-card{border:1px solid var(--border);border-radius:14px;background:var(--bg-raised);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden;}
   .task-head{display:flex;align-items:center;gap:12px;padding:16px 18px;cursor:pointer;user-select:none;}
@@ -158,7 +162,7 @@
 </head>
 <body>
   <div id="root"></div>
-  <script type="application/json" id="state-data">{"logs":[{"id":"log-1787814938962-fn9vyx","participant":"Budi","taskId":"UT-08","durationSec":1,"endedAt":"2026-08-27T07:15:38.962Z"},{"id":"log-1787812895073-s9qw8u","participant":"Budi","taskId":"UT-08","durationSec":2,"endedAt":"2026-08-27T06:41:35.073Z"},{"id":"log-1787812889789-jos5u7","participant":"Budi","taskId":"UT-02","durationSec":3,"endedAt":"2026-08-27T06:41:29.789Z"},{"id":"log-1787812880389-e0deha","participant":"Budi","taskId":"UT-01","durationSec":3,"endedAt":"2026-08-27T06:41:20.389Z"}]}</script>
+  <script type="application/json" id="state-data">{"logs":[]}</script>
   <script>
 (function () {
   var SELF_SRC = document.currentScript.textContent;
@@ -459,7 +463,14 @@
 
   var root = document.getElementById('root');
   var stateEl = document.getElementById('state-data');
-  var STATE = JSON.parse(stateEl.textContent || '{"logs":[]}');
+  var LOGS_KEY = 'rockyUtLogs';
+  var STATE;
+  try {
+    var savedLogs = localStorage.getItem(LOGS_KEY);
+    STATE = savedLogs ? { logs: JSON.parse(savedLogs) } : JSON.parse(stateEl.textContent || '{"logs":[]}');
+  } catch (e) {
+    STATE = JSON.parse(stateEl.textContent || '{"logs":[]}');
+  }
   if (!STATE.logs) STATE.logs = [];
 
   var RUNNING_KEY = 'rockyRunningTimers';
@@ -633,7 +644,9 @@
       '</header>' +
       '<h2 class="sec-title">Daftar Task</h2>' +
       TASKS.map(renderTaskCard).join('') +
-      '<h2 class="sec-title">Riwayat Pengerjaan</h2>' +
+      '<div class="log-head"><h2 class="sec-title" style="margin:0;">Riwayat Pengerjaan</h2>' +
+      (STATE.logs.length ? '<button type="button" class="ghost" data-action="clear-logs">Hapus Riwayat</button>' : '') +
+      '</div>' +
       '<div class="table-wrap"><table><thead><tr><th>Partisipan</th><th>Task</th><th>Durasi</th><th>Selesai</th></tr></thead>' +
       '<tbody id="log-body">' + renderLogRows() + '</tbody></table></div>' +
       '<div id="capability-note"></div>' +
@@ -675,6 +688,7 @@
     var taskId = el.getAttribute('data-task');
 
     if (action === 'toggle-theme') { toggleTheme(); return; }
+    if (action === 'clear-logs') { clearLogs(); return; }
     if (action === 'toggle') {
       openCard = openCard === taskId ? null : taskId;
       renderUI();
@@ -711,6 +725,15 @@
     ensureTicking();
   }
 
+  function clearLogs() {
+    if (!STATE.logs.length) return;
+    if (!confirm('Hapus semua riwayat pengerjaan (' + STATE.logs.length + ' entri)? Tindakan ini tidak bisa dibatalkan.')) return;
+    STATE.logs = [];
+    try { localStorage.removeItem(LOGS_KEY); } catch (e) {}
+    renderUI();
+    toast('Riwayat pengerjaan dihapus.');
+  }
+
   function stopTimer(taskId) {
     var startedAt = running[taskId];
     if (!startedAt) return;
@@ -732,6 +755,7 @@
   }
 
   function persistLog() {
+    try { localStorage.setItem(LOGS_KEY, JSON.stringify(STATE.logs)); } catch (e) {}
     if (!window.claude || typeof window.claude.use !== 'function') return;
     window.claude.use('artifact').then(function (artifact) {
       if (!artifact) return;
