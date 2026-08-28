@@ -236,8 +236,9 @@
           ['Writing', 'Sedang']
         ] },
         { heading: 'Kriteria baru yang perlu ditambahkan', rows: [
-          ['Nama', 'Model Deployment Experience'],
+          ['Nama', 'Model Deployment Experience', { bold: true }],
           ['Deskripsi', 'Pengalaman membawa model machine learning dari eksperimen ke production yang benar-benar dipakai.'],
+          ['Level untuk parameter ini', 'Sangat Baik'],
           ['Level Sangat Baik', 'Pernah men-deploy 3+ model ke production dan memonitornya secara mandiri.'],
           ['Level Baik', 'Pernah men-deploy minimal 1 model ke production dengan bantuan tim.'],
           ['Level Cukup', 'Pernah mencoba deployment di lingkungan staging/testing, belum production penuh.'],
@@ -248,6 +249,7 @@
       copyText: 'Education: saat ini Cukup (sesuaikan levelnya)\nWriting: saat ini Sedang (sesuaikan levelnya)\n\n' +
         'Kriteria baru:\nNama: Model Deployment Experience\n' +
         'Deskripsi: Pengalaman membawa model machine learning dari eksperimen ke production yang benar-benar dipakai.\n' +
+        'Level untuk parameter ini: Sangat Baik\n' +
         'Level Sangat Baik: Pernah men-deploy 3+ model ke production dan memonitornya secara mandiri.\n' +
         'Level Baik: Pernah men-deploy minimal 1 model ke production dengan bantuan tim.\n' +
         'Level Cukup: Pernah mencoba deployment di lingkungan staging/testing, belum production penuh.\n' +
@@ -493,7 +495,8 @@
       if (group.heading) html += '<div class="fields-heading">' + esc(group.heading) + '</div>';
       html += '<table class="fields-table"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>' +
         group.rows.map(function (r) {
-          return '<tr><td>' + esc(r[0]) + '</td><td class="value-cell" tabindex="0" data-action="copy-value">' + esc(r[1]) + '</td></tr>';
+          var val = r[2] && r[2].bold ? '<strong>' + esc(r[1]) + '</strong>' : esc(r[1]);
+          return '<tr><td>' + esc(r[0]) + '</td><td class="value-cell" tabindex="0" data-action="copy-value">' + val + '</td></tr>';
         }).join('') +
         '</tbody></table>';
     });
