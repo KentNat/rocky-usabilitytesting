@@ -169,17 +169,22 @@
 
   var TASKS = [
     { id: 'UT-01', title: 'Onboarding Pertama Kali', needsCV: false,
-      instruction: 'Anda adalah recruiter baru di Cakra AI, perusahaan yang baru mulai memakai Rocky. Siapkan akun perusahaan sampai Rocky siap dipakai untuk rekrutmen pertama (termasuk setup Parameter CV & Interview Assessment yang muncul otomatis di akhir).',
-      criteria: ['Mengisi form akun (Step 1) & Company Info (Step 2).', 'Mengisi form Bot Info (Step 3) sesuai pilihan dropdown yang tersedia.', 'Melalui setup Parameter CV & Interview Assessment (boleh pilih mode "Mulai dari Nol" agar cepat).', 'Mencapai dashboard Rocky.'],
+      instruction: 'Anda adalah recruiter baru di Cakra AI, perusahaan yang baru mulai memakai Rocky. Siapkan akun perusahaan sampai Rocky siap dipakai untuk rekrutmen pertama.',
+      criteria: ['Membuat credential akun (Step 1: Username & Password) sebelum mengisi data lain.', 'Mengisi Company Info (Step 2) & Bot Info (Step 3) sesuai pilihan dropdown yang tersedia.', 'Kalau muncul wizard "Parameter CV & Interview Assessment" setelah Step 3, pilih mode "Mulai dari Nol" di kedua bagian agar cepat.', 'Mencapai dashboard Rocky.'],
       brief: {
-        label: 'Field Form — Step 2 "Company Info" (persis field yang ada di form)',
+        label: 'Field Form — Step 1 "Create Account" (isi ini dulu sebelum Company Info)',
         fields: [
-          ['Nama perusahaan', 'Cakra AI'],
-          ['Industri (dropdown)', 'Teknologi'],
-          ['Jumlah karyawan (dropdown)', '51-200 — perkiraan, jumlah asli belum dipublikasikan resmi'],
-          ['Website (opsional)', 'cakra.ai']
+          ['Username', 'recruiter.cakra'],
+          ['Password', 'CakraTest#2026'],
+          ['Konfirmasi password', 'CakraTest#2026 — harus sama persis dengan Password']
         ],
         extraSections: [
+          { heading: 'Step 2 "Company Info" (persis field yang ada di form)', rows: [
+            ['Nama perusahaan', 'Cakra AI'],
+            ['Industri (dropdown)', 'Teknologi'],
+            ['Jumlah karyawan (dropdown)', '51-200 — perkiraan, jumlah asli belum dipublikasikan resmi'],
+            ['Website (opsional)', 'cakra.ai']
+          ] },
           { heading: 'Step 3 "Bot Info" (persis field yang ada di form)', rows: [
             ['Nama AI interviewer', 'Okta'],
             ['Gaya bicara bot (dropdown)', 'Profesional'],
@@ -187,8 +192,10 @@
             ['Durasi wawancara (dropdown)', '20 menit']
           ] }
         ],
-        note: 'Dropdown Industri hanya berisi: Teknologi, Keuangan, Kesehatan, Retail, Manufaktur, Pendidikan, Lainnya. Dropdown Jumlah karyawan hanya berisi: 1-10, 11-50, 51-200, 201-500, 500+. Dropdown Gaya bicara bot hanya berisi: Profesional, Ramah, Formal. Dropdown Bahasa wawancara hanya berisi: Bahasa Indonesia, English. Dropdown Durasi wawancara hanya berisi: 15 menit, 20 menit, 30 menit. Konteks (bukan field formulir, sekadar info): Cakra AI (PT Cakra Tekno Nusantara) — Panin Tower Senayan City, Jakarta Pusat — membangun Rocky, Sygma, Meetha, Becky, Genits.',
-        copyText: 'STEP 2 — COMPANY INFO\n' +
+        note: 'Username/Password di atas cuma untuk keperluan testing (akun dummy, tidak konek ke sistem asli manapun) — jangan pakai credential pribadi. Dropdown Industri hanya berisi: Teknologi, Keuangan, Kesehatan, Retail, Manufaktur, Pendidikan, Lainnya. Dropdown Jumlah karyawan hanya berisi: 1-10, 11-50, 51-200, 201-500, 500+. Dropdown Gaya bicara bot hanya berisi: Profesional, Ramah, Formal. Dropdown Bahasa wawancara hanya berisi: Bahasa Indonesia, English. Dropdown Durasi wawancara hanya berisi: 15 menit, 20 menit, 30 menit. Wizard "Parameter CV & Interview Assessment" cuma muncul sekali per browser — kalau sebelumnya sudah pernah dilewati di browser yang sama, Step 3 langsung lanjut ke dashboard tanpa wizard itu, itu wajar. Konteks (bukan field formulir, sekadar info): Cakra AI (PT Cakra Tekno Nusantara) — Panin Tower Senayan City, Jakarta Pusat — membangun Rocky, Sygma, Meetha, Becky, Genits.',
+        copyText: 'STEP 1 — CREATE ACCOUNT\n' +
+          'Username: recruiter.cakra\nPassword: CakraTest#2026\nKonfirmasi password: CakraTest#2026\n\n' +
+          'STEP 2 — COMPANY INFO\n' +
           'Nama perusahaan: Cakra AI\n' +
           'Industri: Teknologi\n' +
           'Jumlah karyawan: 51-200\n' +
@@ -198,7 +205,7 @@
           'Gaya bicara bot: Profesional\n' +
           'Bahasa wawancara: Bahasa Indonesia\n' +
           'Durasi wawancara: 20 menit\n\n' +
-          'Setelah Step 3, akan ada wizard wajib "Parameter CV & Interview Assessment" — pilih mode "Mulai dari Nol" di kedua step untuk lanjut paling cepat.'
+          'Kalau setelah Step 3 muncul wizard "Parameter CV & Interview Assessment", pilih mode "Mulai dari Nol" di kedua bagian untuk lanjut paling cepat (wizard ini hanya muncul sekali per browser).'
       } },
     { id: 'UT-02', title: 'Membuat Lowongan (Step 1–2)', needsCV: false,
       instruction: 'Cakra AI sedang mencari AI Engineer. Isi Step 1 "Persyaratan & Detail Kerja" dan Step 2 "Deskripsi" di wizard "+ New Job" sesuai brief di bawah.',
