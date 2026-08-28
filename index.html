@@ -93,6 +93,23 @@
   .task-body p{margin:0 0 12px;font-size:14px;color:var(--ink);line-height:1.6;}
   .task-body > p:first-child{margin-top:14px;}
 
+  .fields-heading{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint);font-weight:600;margin:16px 0 4px;}
+  table.fields-table{width:100%;border-collapse:collapse;margin:6px 0 10px;font-size:13.5px;}
+  table.fields-table th{
+    text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint);
+    font-weight:600;padding:0 12px 6px 0;border-bottom:1px solid var(--border);
+  }
+  table.fields-table td{padding:7px 12px 7px 0;border-bottom:1px solid var(--border-soft);vertical-align:top;}
+  table.fields-table tr:last-child td{border-bottom:1px solid var(--border-soft);}
+  table.fields-table td:first-child{color:var(--ink-soft);white-space:nowrap;width:1%;padding-right:24px;}
+  td.value-cell{
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--ink);cursor:pointer;
+    border-radius:5px;transition:background .1s;
+  }
+  td.value-cell:hover{background:var(--accent-soft);}
+  td.value-cell:focus{outline:2px solid var(--accent);outline-offset:-1px;background:var(--accent-soft);}
+  .extra-note{font-size:12.5px;color:var(--ink-faint);}
+
   .row-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px;}
   button{
     font:inherit;font-size:13px;font-weight:600;padding:8px 14px;border-radius:8px;border:1px solid var(--border);
@@ -160,39 +177,43 @@
   var TASKS = [
     { id: 'UT-01', title: 'Onboarding Pertama Kali', needsCV: false,
       objective: 'Anda recruiter baru di Cakra AI. Siapkan akun perusahaan sampai Rocky benar-benar siap dipakai untuk merekrut.',
-      credentials: [
-        'Username: recruiter.cakra',
-        'Password: CakraTest#2026',
-        'Konfirmasi password: CakraTest#2026',
-        'Nama perusahaan: Cakra AI',
-        'Industri: Teknologi',
-        'Jumlah karyawan: 51-200 (perkiraan, belum dipublikasikan resmi)',
-        'Website: cakra.ai (opsional)',
-        'Nama AI interviewer: Okta',
-        'Gaya bicara bot: Profesional',
-        'Bahasa wawancara: Bahasa Indonesia',
-        'Durasi wawancara: 20 menit'
+      fieldGroups: [
+        { rows: [
+          ['Username', 'recruiter.cakra'],
+          ['Password', 'CakraTest#2026'],
+          ['Konfirmasi password', 'CakraTest#2026'],
+          ['Nama perusahaan', 'Cakra AI'],
+          ['Industri', 'Teknologi'],
+          ['Jumlah karyawan', '51-200'],
+          ['Website', 'cakra.ai'],
+          ['Nama AI interviewer', 'Okta'],
+          ['Gaya bicara bot', 'Profesional'],
+          ['Bahasa wawancara', 'Bahasa Indonesia'],
+          ['Durasi wawancara', '20 menit']
+        ] }
       ],
-      extra: 'Username & password di atas cuma untuk keperluan testing (akun dummy) — bukan credential sungguhan siapa pun.',
+      extra: 'Website opsional. Jumlah karyawan adalah perkiraan (belum dipublikasikan resmi). Username & password di atas cuma untuk keperluan testing (akun dummy) — bukan credential sungguhan siapa pun.',
       copyText: 'Username: recruiter.cakra\nPassword: CakraTest#2026\nKonfirmasi password: CakraTest#2026\n' +
         'Nama perusahaan: Cakra AI\nIndustri: Teknologi\nJumlah karyawan: 51-200\nWebsite (opsional): cakra.ai\n' +
         'Nama AI interviewer: Okta\nGaya bicara bot: Profesional\nBahasa wawancara: Bahasa Indonesia\nDurasi wawancara: 20 menit'
     },
     { id: 'UT-02', title: 'Membuat Lowongan', needsCV: false,
       objective: 'Cakra AI sedang mencari AI Engineer. Buat satu lowongan baru untuk role ini sampai tersimpan, sesuai kebutuhan berikut.',
-      credentials: [
-        'Judul: AI Engineer',
-        'Jenis kelamin: Tanpa preferensi',
-        'Usia: Tidak ada batasan',
-        'Skill wajib: Python, Machine Learning, PyTorch, SQL',
-        'Pendidikan minimal: S1',
-        'Pengalaman kerja: Mid-level',
-        'Tipe kerja: Penuh waktu',
-        'Sistem kerja: Hybrid',
-        'Rentang gaji bulanan: Rp 18.000.000 – Rp 28.000.000',
-        'Benefit: BPJS Kesehatan, BPJS Tenaga Kerja, Bonus Kinerja, Jenjang Karir, Pelatihan/Sertifikasi',
-        'Status lowongan: Terbuka',
-        'Jumlah kebutuhan: 1 orang'
+      fieldGroups: [
+        { rows: [
+          ['Judul', 'AI Engineer'],
+          ['Jenis kelamin', 'Tanpa preferensi'],
+          ['Usia', 'Tidak ada batasan'],
+          ['Skill wajib', 'Python, Machine Learning, PyTorch, SQL'],
+          ['Pendidikan minimal', 'S1'],
+          ['Pengalaman kerja', 'Mid-level'],
+          ['Tipe kerja', 'Penuh waktu'],
+          ['Sistem kerja', 'Hybrid'],
+          ['Rentang gaji bulanan', 'Rp 18.000.000 – Rp 28.000.000'],
+          ['Benefit', 'BPJS Kesehatan, BPJS Tenaga Kerja, Bonus Kinerja, Jenjang Karir, Pelatihan/Sertifikasi'],
+          ['Status lowongan', 'Terbuka'],
+          ['Jumlah kebutuhan', '1 orang']
+        ] }
       ],
       copyText: 'Judul: AI Engineer\nJenis kelamin: Tanpa preferensi\nUsia: Tidak ada batasan\n' +
         'Skill wajib: Python, Machine Learning, PyTorch, SQL\nPendidikan minimal: S1\nPengalaman kerja: Mid-level\n' +
@@ -209,17 +230,21 @@
       } },
     { id: 'UT-03', title: 'Mengatur Penilaian Kandidat', needsCV: false,
       objective: 'Sesuaikan dua kriteria penilaian CV berikut supaya pas dengan kebutuhan role AI Engineer, lalu tambahkan satu kriteria penilaian baru menggunakan data yang sudah disiapkan di bawah.',
-      credentials: [
-        'Education: saat ini berlevel Cukup — sesuaikan sendiri levelnya',
-        'Writing: saat ini berlevel Sedang — sesuaikan sendiri levelnya'
+      fieldGroups: [
+        { rows: [
+          ['Education', 'Cukup'],
+          ['Writing', 'Sedang']
+        ] },
+        { heading: 'Kriteria baru yang perlu ditambahkan', rows: [
+          ['Nama', 'Model Deployment Experience'],
+          ['Deskripsi', 'Pengalaman membawa model machine learning dari eksperimen ke production yang benar-benar dipakai.'],
+          ['Level Sangat Baik', 'Pernah men-deploy 3+ model ke production dan memonitornya secara mandiri.'],
+          ['Level Baik', 'Pernah men-deploy minimal 1 model ke production dengan bantuan tim.'],
+          ['Level Cukup', 'Pernah mencoba deployment di lingkungan staging/testing, belum production penuh.'],
+          ['Level Sedang', 'Baru familiar secara teori, belum pernah mencoba deployment.']
+        ] }
       ],
-      extra: 'Kriteria baru yang perlu ditambahkan:\n' +
-        'Nama: Model Deployment Experience\n' +
-        'Deskripsi: Pengalaman membawa model machine learning dari eksperimen ke production yang benar-benar dipakai.\n' +
-        'Level Sangat Baik: Pernah men-deploy 3+ model ke production dan memonitornya secara mandiri.\n' +
-        'Level Baik: Pernah men-deploy minimal 1 model ke production dengan bantuan tim.\n' +
-        'Level Cukup: Pernah mencoba deployment di lingkungan staging/testing, belum production penuh.\n' +
-        'Level Sedang: Baru familiar secara teori, belum pernah mencoba deployment.',
+      extra: 'Education dan Writing di atas adalah level saat ini — levelnya bebas Anda tentukan sendiri.',
       copyText: 'Education: saat ini Cukup (sesuaikan levelnya)\nWriting: saat ini Sedang (sesuaikan levelnya)\n\n' +
         'Kriteria baru:\nNama: Model Deployment Experience\n' +
         'Deskripsi: Pengalaman membawa model machine learning dari eksperimen ke production yang benar-benar dipakai.\n' +
@@ -230,19 +255,23 @@
     },
     { id: 'UT-04', title: 'Mengatur Interview AI', needsCV: false,
       objective: 'Atur wawancara AI untuk role AI Engineer: tentukan durasi & bahasa yang dipakai, sesuaikan dua kriteria penilaian berikut, lalu tambahkan satu kriteria baru menggunakan data yang sudah disiapkan di bawah.',
-      credentials: [
-        'Durasi wawancara: 20 menit',
-        'Bahasa: English, Indonesia',
-        'Qualification: saat ini berlevel Cukup — sesuaikan sendiri levelnya',
-        'Cultural Fit: saat ini berlevel Sedang — sesuaikan sendiri levelnya'
+      fieldGroups: [
+        { rows: [
+          ['Durasi wawancara', '20 menit'],
+          ['Bahasa', 'English, Indonesia'],
+          ['Qualification', 'Cukup'],
+          ['Cultural Fit', 'Sedang']
+        ] },
+        { heading: 'Kriteria baru yang perlu ditambahkan', rows: [
+          ['Nama', 'AI/ML Technical Depth'],
+          ['Deskripsi', 'Kedalaman pemahaman teknis kandidat saat menjelaskan pendekatan machine learning dalam wawancara.'],
+          ['Level Sangat Baik', 'Menjelaskan trade-off teknis dengan detail dan contoh nyata dari pengalaman sendiri.'],
+          ['Level Baik', 'Menjelaskan konsep dengan benar, contoh masih umum/tidak terlalu spesifik.'],
+          ['Level Cukup', 'Memahami konsep dasar tapi kesulitan menjelaskan penerapannya.'],
+          ['Level Sedang', 'Jawaban hanya hafalan teori, belum menunjukkan pemahaman mendalam.']
+        ] }
       ],
-      extra: 'Kriteria baru yang perlu ditambahkan:\n' +
-        'Nama: AI/ML Technical Depth\n' +
-        'Deskripsi: Kedalaman pemahaman teknis kandidat saat menjelaskan pendekatan machine learning dalam wawancara.\n' +
-        'Level Sangat Baik: Menjelaskan trade-off teknis dengan detail dan contoh nyata dari pengalaman sendiri.\n' +
-        'Level Baik: Menjelaskan konsep dengan benar, contoh masih umum/tidak terlalu spesifik.\n' +
-        'Level Cukup: Memahami konsep dasar tapi kesulitan menjelaskan penerapannya.\n' +
-        'Level Sedang: Jawaban hanya hafalan teori, belum menunjukkan pemahaman mendalam.',
+      extra: 'Qualification dan Cultural Fit di atas adalah level saat ini — levelnya bebas Anda tentukan sendiri.',
       copyText: 'Durasi wawancara: 20 menit\nBahasa: English, Indonesia\n' +
         'Qualification: saat ini Cukup (sesuaikan levelnya)\nCultural Fit: saat ini Sedang (sesuaikan levelnya)\n\n' +
         'Kriteria baru:\nNama: AI/ML Technical Depth\n' +
@@ -457,15 +486,32 @@
     return esc(text).replace(/\n/g, '<br>');
   }
 
-  function renderCredentials(task) {
-    if (!task.credentials || !task.credentials.length) return '';
-    return '<p>' + task.credentials.map(esc).join('<br>') + '</p>' +
-      '<div class="row-actions"><button type="button" class="link-btn" data-action="copy-brief" data-task="' + task.id + '">Salin</button></div>';
+  function renderFieldGroups(task) {
+    if (!task.fieldGroups || !task.fieldGroups.length) return '';
+    var html = '';
+    task.fieldGroups.forEach(function (group) {
+      if (group.heading) html += '<div class="fields-heading">' + esc(group.heading) + '</div>';
+      html += '<table class="fields-table"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>' +
+        group.rows.map(function (r) {
+          return '<tr><td>' + esc(r[0]) + '</td><td class="value-cell" tabindex="0" data-action="copy-value">' + esc(r[1]) + '</td></tr>';
+        }).join('') +
+        '</tbody></table>';
+    });
+    html += '<div class="row-actions"><button type="button" class="link-btn" data-action="copy-brief" data-task="' + task.id + '">Salin semua sebagai teks</button></div>';
+    return html;
   }
 
   function renderExtra(task) {
     if (!task.extra) return '';
-    return '<p>' + nl2br(task.extra) + '</p>';
+    return '<p class="extra-note">' + nl2br(task.extra) + '</p>';
+  }
+
+  function selectCellContents(cell) {
+    var range = document.createRange();
+    range.selectNodeContents(cell);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
   }
 
   function renderReference(task) {
@@ -515,7 +561,7 @@
       '</div>' +
       '<div class="task-body">' +
       '<p>' + esc(task.objective) + '</p>' +
-      renderCredentials(task) +
+      renderFieldGroups(task) +
       renderExtra(task) +
       renderReference(task) +
       cvHtml +
@@ -596,6 +642,12 @@
       });
     }
     root.addEventListener('click', onRootClick);
+    root.addEventListener('keydown', function (e) {
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('value-cell')) {
+        e.preventDefault();
+        onRootClick({ target: e.target });
+      }
+    });
   }
 
   function renderStatusesOnly() {
@@ -618,6 +670,11 @@
 
     if (action === 'toggle-theme') { toggleTheme(); return; }
     if (action === 'clear-logs') { clearLogs(); return; }
+    if (action === 'copy-value') {
+      selectCellContents(el);
+      copyText(el.textContent, 'Tersalin: ' + el.textContent);
+      return;
+    }
     if (action === 'toggle') {
       openCard = openCard === taskId ? null : taskId;
       renderUI();
